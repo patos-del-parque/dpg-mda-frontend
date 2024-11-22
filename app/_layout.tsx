@@ -4,6 +4,7 @@ import StackNavigator from '../navigation/StackNavigator';
 
 import { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
+import { useVideoPlayer, VideoView } from 'expo-video';
 
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
@@ -11,7 +12,7 @@ const styles = StyleSheet.create({
   errorText: { color: 'red', fontSize: 16 },
 });
 
-const App: React.FC = () => { 
+const App: React.FC = () => {
   //Uncomment this section to test the API (works as of 06/11 - 16:40)
   /*
   const [data, setData] = useState(null);      // State to store API data
@@ -50,6 +51,27 @@ const App: React.FC = () => {
       )}
     </View>
   );
+  
+ 
+  // TODO: use "useEffect" to avoid crashing when user explores the video
+  /*
+  const player = useVideoPlayer('https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4', player => {
+    player.loop = true;
+    player.play();
+  });
+
+  return (
+    <VideoView 
+      style={{
+        width: 350,
+        height: 275
+      }}
+      player={player}
+      allowsFullscreen
+      allowsPictureInPicture
+      nativeControls
+    />
+  );
   */
 
   return (
@@ -60,38 +82,3 @@ const App: React.FC = () => {
 };
 
 export default App;
-
-
-
-/* import React from 'react';
-import { View, ScrollView, StyleSheet } from 'react-native';
-import UserCard from '../components/UserCard';
-
-const App = () => {
-  const users = [
-    { name: 'Mario Medina Lopez', email: 'juan@example.com' },
-    { name: 'Carlos Fernandez Arrabal', email: 'ana@example.com' },
-    { name: 'Silvia Fernandez Arrabal', email: 'luis@example.com' },
-    // Agrega más usuarios aquí
-  ];
-
-  return (
-    <View style={styles.container}>
-      <ScrollView>
-        {users.map((user, index) => (
-          <UserCard key={index} name={user.name} email={user.email} />
-        ))}
-      </ScrollView>
-    </View>
-  );
-};
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    padding: 16,
-    backgroundColor: '#f0f0f0',
-  },
-});
-
-export default App; */

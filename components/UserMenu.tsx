@@ -35,7 +35,7 @@ const UserMenu: React.FC<LoginTextprops> = ({ ruta,ruta2 }) => {
 
     return(
       <View style={styles.container}>
-      <Text style={styles.title}>Panel de Administración</Text>
+      <Text style={styles.title}>Panel de Estudiante</Text>
 
       <Pressable style={styles.button} onPress={handleCreateTasks}>
         <FontAwesome name="tasks" size={24} color="#fff" style={styles.icon} />

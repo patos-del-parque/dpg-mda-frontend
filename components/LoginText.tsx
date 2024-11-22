@@ -15,7 +15,9 @@ const LoginText: React.FC<LoginTextprops> = ({ ruta }) => {
   const [password, setPassword] = useState('');
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   
+  
   const pressLoginButton = async () => {
+    navigation.navigate(ruta as keyof RootStackParamList);
     try {
       const response = await fetch('https://api.jsdu9873.tech/api/login', {
         method: 'POST',

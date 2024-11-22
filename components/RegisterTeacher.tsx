@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
-import { View, Text,  TextInput, StyleSheet, Alert, Pressable } from 'react-native';
+import { View, Text,  TextInput, StyleSheet, Pressable } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/StackNavigator';
-import CheckBox from '@react-native-community/checkbox';
+import { Picker } from '@react-native-picker/picker';
 
-interface RegisterStudentprops {
+
+interface RegisterTeacherprops {
     ruta: String;
   }
-
   
-  const RegisterStudent: React.FC<RegisterStudentprops> = ({ ruta }) => {
+  const RegisterTeacher: React.FC<RegisterTeacherprops> = ({ ruta }) => {
   
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   
@@ -17,36 +17,28 @@ interface RegisterStudentprops {
       navigation.navigate(ruta as keyof RootStackParamList);
 
       try {
-        const response = await fetch('https://api.jsdu9873.tech/api/students/add-student', {
+        const response = await fetch('http://localhost:27017/api/students/add-student', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nombre, apellidos, edad: parseInt(edad) ,aula, password }),
+            body: JSON.stringify({ nombre, apellidos, DNI, edad: parseInt(edad), especialidad, password }),
         });
         const result = await response.json();
-        if (response.ok) {
-          Alert.alert('Éxito', result.message); 
-        } else {
-          Alert.alert('Error', result.message || 'Hubo un problema al agregar el estudiante.');
-        }
-      } catch (error) {
-        console.error(error);
-        Alert.alert('Error', 'No se pudo conectar con el servidor.');
-      }
+        alert(result.message || 'Profesor agregado exitosamente');
+    } catch (error) {
+        alert('Error al agregar el profesorf');
+    }
     };
 
     const [nombre, setNombre] = useState('');
     const [apellidos, setApellidos] = useState('');
+    const [DNI, setDNI] = useState('');
     const [edad, setEdad] = useState('');
-    const [aula, setAula] = useState('');
+    const [especialidad, setEspecialidad] = useState('');
     const [password, setPasswpord] = useState("");
-    const [lectura, setLectura] = useState(false);
-    const [imagen, setImagen] = useState(false);
-    const [video, setVideo] = useState(false);
-
 
     return(
         <View style={styles.formContainer}>
-            <Text style={styles.title}>Registrar Estudiante</Text>
+            <Text style={styles.title}>Registrar Profesor</Text>
     
             <Text style={styles.label}>Nombre</Text>
             <TextInput style={styles.input} value={nombre} onChangeText={setNombre} placeholder="Introduce el nombre" />
@@ -54,34 +46,18 @@ interface RegisterStudentprops {
             <Text style={styles.label}>Apellidos</Text>
             <TextInput style={styles.input} value={apellidos} onChangeText={setApellidos} placeholder="Introduce los apellidos" />
     
-            <Text style={styles.label}>Aula</Text>
-            <TextInput style={styles.input} value={aula} onChangeText={setAula} placeholder="Introduce el curso" />
+            <Text style={styles.label}>DNI</Text>
+            <TextInput style={styles.input} value={DNI} onChangeText={setDNI} placeholder="Introduce el DNI" />
+    
+            <Text style={styles.label}>Especialidad</Text>
+            <TextInput style={styles.input} value={especialidad} onChangeText={setEspecialidad} placeholder="Introduce la especialidad" />
     
             <Text style={styles.label}>Edad</Text>
             <TextInput style={styles.input} value={edad} onChangeText={setEdad} placeholder="Introduce la edad" keyboardType="numeric" />
 
-           {/*  <Text style={styles.label}>Lectura</Text>
-            <CheckBox
-              value={lectura}
-              onValueChange={setLectura}
-              tintColors={{ true: '#00f', false: '#f00' }} 
-            />
-            <Text style={styles.label}>Imagen</Text>
-            <CheckBox
-              value={imagen}
-              onValueChange={setImagen}
-              tintColors={{ true: '#00f', false: '#f00' }} 
-            />
-            <Text style={styles.label}>Video</Text>
-            <CheckBox
-              value={video}
-              onValueChange={setVideo}
-              tintColors={{ true: '#00f', false: '#f00' }} 
-            />  */}
-
-            <Text style={styles.label}>Contraseña</Text>
-            <TextInput style={styles.input} value={password} onChangeText={setPasswpord} placeholder="Introduce la contraseña" keyboardType="numeric" />
-  
+          <Text style={styles.label}>Contraseña</Text>
+          <TextInput style={styles.input} value={password} onChangeText={setPasswpord} placeholder="Introduce la contraseña" keyboardType="numeric" />
+ 
             <Pressable style={styles.button} onPress={pressLoginButton}>
             <Text style={styles.buttonText}>Registrar</Text>
             </Pressable>
@@ -139,7 +115,24 @@ interface RegisterStudentprops {
       fontSize: 18,
       fontWeight: 'bold',
     },
+    pickerContainer: {
+      height: 40,
+      width: '100%',
+      borderColor: '#ccc',
+      borderWidth: 1,
+      borderRadius: 5,
+      marginBottom: 15,
+      justifyContent: 'center',
+      
+    },
+    picker: {
+      width: '100%',
+      height: 42,
+      borderRadius: 8,
+      backgroundColor: '#e0f7fa',
+      color: '#004d40',
+    },
   });
 
 
-export default RegisterStudent;
+export default RegisterTeacher;

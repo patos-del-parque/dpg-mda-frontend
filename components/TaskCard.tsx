@@ -3,13 +3,11 @@ import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import { Card } from 'react-native-elements';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/StackNavigator';
-
-
+import { ActiveCursor } from 'react-native-gesture-handler/lib/typescript/handlers/gestureHandlerCommon';
 
 const usuario = {
   name: 'Juan Perez',
   necesidad: 2,
-  estado: 'Activo',
 };
 
 
@@ -24,6 +22,8 @@ interface Tarea {
   title: string;
   descripcion: string;
   pasos: Paso[];
+  estado: number;
+  photo: string;
 }
 
 interface TaskCardProps {
@@ -46,6 +46,7 @@ const TaskCard: React.FC = ({prueba}) => {
           <TouchableOpacity onPress={handlePress}>
             <Card.Title>{tarea.title}</Card.Title>
             <Text style={styles.description}>{tarea.descripcion}</Text>
+            <Image source ={{ uri: tarea.photo}} style={styles.image} />
             <Card.Divider />
 
             {tarea.pasos.map((paso) => (
@@ -61,7 +62,7 @@ const TaskCard: React.FC = ({prueba}) => {
                 <View style={styles.divider} />
               </View>
             ))}
-            <Text>{usuario.estado}</Text>
+            <Text>{tarea.estado}</Text>
           </TouchableOpacity>
         </Card>
       ))}
@@ -71,33 +72,58 @@ const TaskCard: React.FC = ({prueba}) => {
 
 const styles = StyleSheet.create({
   container: {
+    flex: 1,
     padding: 10,
+    backgroundColor: '#f9f9f9', // Fondo claro para destacar las tarjetas
   },
   card: {
-    marginBottom: 15,
+    borderRadius: 12, // Bordes redondeados
+    shadowColor: '#000', // Sombra
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.2,
+    shadowRadius: 4,
+    elevation: 4, // Sombra en Android
+    padding: 16, // Espaciado interno
+    backgroundColor: '#fff', // Fondo blanco para las tarjetas
+    marginBottom: 15, // Espaciado entre tarjetas
   },
   description: {
-    fontSize: 14,
+    fontSize: 16,
     color: '#333',
     marginBottom: 10,
+    textAlign: 'center', // Texto centrado
+    fontWeight: 'bold', // Destacar descripción
   },
   stepContainer: {
-    marginVertical: 8,
+    marginVertical: 10,
+    padding: 10,
+    backgroundColor: '#f1f1f1', // Fondo gris claro para pasos
+    borderRadius: 8, // Bordes redondeados para pasos
   },
   alternativeText: {
-    fontSize: 13,
-    color: '#777',
+    fontSize: 14,
+    color: '#555',
     fontStyle: 'italic',
+    textAlign: 'center', // Centrar texto
+    marginTop: 5,
   },
   image: {
-    width: 100,
-    height: 100,
-    marginTop: 5,
+    width: 120,
+    height: 120,
+    marginTop: 10,
+    borderRadius: 8, // Bordes redondeados para imágenes
+    alignSelf: 'center', // Centrar imagen
   },
   divider: {
     borderBottomWidth: 1,
-    borderBottomColor: 'gray',
+    borderBottomColor: '#ddd',
     marginVertical: 10,
+  },
+  estadoText: {
+    fontSize: 14,
+    color: '#007BFF', // Color azul para el estado
+    textAlign: 'center', // Centrar texto
+    fontWeight: '600', // Resaltar texto del estado
   },
 });
 

@@ -1,123 +1,111 @@
-import React from 'react';
-import { View, Text, TextInput, StyleSheet, ScrollView, Pressable, Image  } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity, Image } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/StackNavigator';
 import { FontAwesome } from '@expo/vector-icons';
+import { RouteProp, useRoute } from '@react-navigation/native';
 
+interface LoginTextProps {
+    ruta: string;
+    datos: Array<{
+        nombreAula: string;
+        imageAula: string;
+    }>;
+}
 
-interface LoginTextprops {
-    ruta: String;
-  }
-  
-  
+type MenuStudentScreenRouteProp = RouteProp<RootStackParamList, 'MenuStudentScreen'>;
 
-  
-
-const MenuStudent: React.FC<LoginTextprops> = ({ruta}) => {
+const MenuStudent: React.FC<LoginTextProps> = ({ ruta, datos }) => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  
-    const handleCreateTasks = () => {
-        navigation.navigate(ruta as keyof RootStackParamList);
+    const route = useRoute<MenuStudentScreenRouteProp>();
+    const { taskCompleted, nombreAula: completedAula } = route.params || {};
+
+    const [completedTasks, setCompletedTasks] = useState<{ [aula: string]: boolean }>({});
+
+    useEffect(() => {
+        if (taskCompleted && completedAula && !completedTasks[completedAula]) {
+            setCompletedTasks((prev) => ({ ...prev, [completedAula]: true }));
+        }
+    }, [taskCompleted, completedAula]);
+
+    const handleCreateTasks = (nombreAula: string, imageAula: string) => {
+        navigation.navigate(ruta, { nombreAula, imageAula });
     };
 
-    const menus = [
-        {
-          nombre: 'Menú 1',
-          tipoComida: 'Vegetariana',
-          ingredientes: ['Zanahorias', 'Calabacín', 'Tomates'],
-          alergenos: ['Gluten'],
-          horarioApertura: '12:00 PM',
-          horarioCierre: '3:00 PM',
-          image: 'https://reactnative.dev/docs/assets/p_cat2.png',
-        },
-        {
-          nombre: 'Menú 2',
-          tipoComida: 'Carne',
-          ingredientes: ['Pollo', 'Patatas', 'Ensalada'],
-          alergenos: ['Ninguno'],
-          horarioApertura: '12:00 PM',
-          horarioCierre: '3:00 PM',
-          image: 'https://reactnative.dev/docs/assets/p_cat2.png',
-        },
-        {
-          nombre: 'Menú 3',
-          tipoComida: 'Pescado',
-          ingredientes: ['Salmón', 'Espárragos', 'Arroz'],
-          alergenos: ['Pescado'],
-          horarioApertura: '12:00 PM',
-          horarioCierre: '3:00 PM',
-          image: 'https://reactnative.dev/docs/assets/p_cat2.png',
-        },
-      ];
-    
-      return (
-        <ScrollView contentContainerStyle={styles.container}>
-          {menus.map((menu, index) => (
-            <View key={index} style={styles.card}>
-              <Image source={{ uri: menu.image }} style={styles.image} />
-              <View style={styles.textContainer}>
-                <Text style={styles.title}>{menu.nombre}</Text>
-                <Text style={styles.text}>Tipo de comida: {menu.tipoComida}</Text>
-                <Text style={styles.text}>Ingredientes: {menu.ingredientes.join(', ')}</Text>
-                <Text style={styles.text}>Alérgenos: {menu.alergenos.join(', ')}</Text>
-                <Text style={styles.text}>Horario: {menu.horarioApertura} - {menu.horarioCierre}</Text>
-              </View>
-              <Pressable 
-                style={styles.arrowButton}
-                onPress={handleCreateTasks} 
-              >
-                <FontAwesome name="arrow-right" size={35} color="#00796b" />
-              </Pressable>
-            </View>
-          ))}
-        </ScrollView>
-      );
-    };
-    
-    const styles = StyleSheet.create({
-      container: {
-        padding: 20,
-        alignItems: 'center',
-      },
-      card: {
+    return (
+        <View style={styles.container}>
+            <ScrollView>
+
+                {datos.map((dato, index) => (
+                    <View key={index} style={styles.row}>
+                        <View style={styles.aulaCard}>
+                            <Image source={{ uri: dato.imageAula }} style={styles.image} />
+                            <View style={styles.textContainer}>
+                                <Text style={styles.aulaTitle}>{dato.nombreAula}</Text>
+                            </View>
+                            <TouchableOpacity
+                                style={styles.arrowButton}
+                                onPress={() => handleCreateTasks(dato.nombreAula, dato.imageAula)}
+                            >
+                                <FontAwesome name="arrow-right" size={26} color="#00796b" />
+                            </TouchableOpacity>
+                            {completedTasks[dato.nombreAula] && (
+                                <FontAwesome name="check-circle" size={30} color="green" />
+                            )}
+                        </View>
+                    </View>
+                ))}
+            </ScrollView>
+        </View>
+    );
+};
+
+const styles = StyleSheet.create({
+    container: {
+        flex: 1,
+        padding: 16,
+        backgroundColor: '#f0f0f0',
+    },
+    row: {
         flexDirection: 'row',
+        justifyContent: 'center',
+        marginBottom: 20,
+    },
+    aulaCard: {
         width: '90%',
         padding: 20,
-        marginVertical: 10,
         backgroundColor: '#e0f7fa',
         borderRadius: 10,
+        alignItems: 'center',
         shadowColor: '#000',
         shadowOffset: { width: 0, height: 4 },
         shadowOpacity: 0.3,
         shadowRadius: 8,
         elevation: 6,
-        alignItems: 'center',
-      },
-      image: {
-        width: 95,
-        height: 95,
+    },
+    image: {
+        width: 100,
+        height: 100,
         borderRadius: 10,
-        marginRight: 15,
-      },
-      textContainer: {
-        flex: 1,
-      },
-      title: {
-        fontSize: 20,
+        marginBottom: 15,
+    },
+    textContainer: {
+        alignItems: 'center',
+    },
+    aulaTitle: {
+        fontSize: 30,
         fontWeight: 'bold',
         color: '#00796b',
         marginBottom: 8,
-      },
-      text: {
+    },
+    text: {
         fontSize: 16,
         color: '#004d40',
         marginBottom: 4,
-      },
-      arrowButton: {
-        padding: 10,
-      },
-    });
-    
-    
+    },
+    arrowButton: {
+        marginTop: 10,
+    },
+});
 
 export default MenuStudent;

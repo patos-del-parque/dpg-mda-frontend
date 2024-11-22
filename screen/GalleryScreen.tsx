@@ -1,7 +1,7 @@
 // screens/GalleryScreen.tsx
 import React, { useState, useEffect } from 'react';
 import { View, ScrollView, StyleSheet, Text } from 'react-native';
-import UserCard from '../components/UserCard';
+import UserCard from '../components/AlonsoCard';
 import { Button } from 'react-native-elements';
 
 const GalleryScreen: React.FC = () => {
@@ -36,7 +36,7 @@ const GalleryScreen: React.FC = () => {
       <Text style={styles.title}>Estudiantes</Text>
       <ScrollView contentContainerStyle={styles.scrollContent}>
         {users.map((user, index) => (
-          <UserCard key={index} name={user.name} urlPhoto={user.email} />
+          <UserCard key={index} name={user.name} urlPhoto={user.email} estado={0}/>
         ))}
       </ScrollView>
     </View>

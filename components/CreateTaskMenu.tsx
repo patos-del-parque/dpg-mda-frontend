@@ -1,19 +1,33 @@
 import React, { useState } from 'react';
-import { ScrollView,View, Text, Image,  TextInput,Alert, StyleSheet, Button, FlatList, TouchableOpacity } from 'react-native';
+import { ScrollView, View, Text, Image,  TextInput,Alert, StyleSheet, Button, FlatList, TouchableOpacity } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker'; 
+import { useVideoPlayer, VideoView } from 'expo-video';
 
-    type Step = {
-        text: string;
-        imageUri?: string;
-    };
+type Step = {
+    text: string;
+    description: string,
+    videoUri?: string;
+    imageUri?: string;
+};
 
     const CreateTaskMenu: React.FC = () => {
         const [taskName, setTaskName] = useState('');
         const [taskSteps, setTaskSteps] = useState<Step[]>([]);
         const [currentStepText, setCurrentStepText] = useState('');
         const [taskDate, setTaskDate] = useState('');
+        const [taskdescription, setTaskDescription] = useState('');
         const [imageUri, setImageUri] = useState<string | undefined>(undefined);
         const [videoUri, setVideoUri] = useState<string | undefined>(undefined);
+        const [isPlaying, setIsPlaying] = useState(false);
+
+
+        // Crear el nuevo paso con texto, imagen y video
+        const newStep: Step = {
+          description: taskdescription,
+          text: currentStepText,
+          imageUri: imageUri,
+          videoUri: videoUri,
+        };
 
         // Función para seleccionar una imagen
     const selectImage = async () => {
@@ -29,6 +43,37 @@ import { launchImageLibrary } from 'react-native-image-picker';
         }
     };
 
+    const selectVideo = async () => {
+      const result = await launchImageLibrary({
+          mediaType: 'video',
+          includeBase64: false,
+      });
+  
+      if (result.assets && result.assets.length > 0) {
+          setVideoUri(result.assets[0].uri);
+      } else {
+          Alert.alert('Error', 'Por favor, selecciona un video.');
+      }
+    };
+
+    const player = videoUri
+    ? useVideoPlayer(videoUri, (player) => {
+          player.loop = true;
+      })
+    : null;
+
+    const togglePlayPause = () => {
+        if (player) {
+            if (isPlaying) {
+                player.pause();
+            } else {
+                player.play();
+            }
+            setIsPlaying(!isPlaying); // Alterna el estado de reproducción
+        }
+    };
+
+
     // Función para añadir el paso actual a la lista de pasos
     const addStep = async () => {
         if (!currentStepText.trim()) {
@@ -36,25 +81,23 @@ import { launchImageLibrary } from 'react-native-image-picker';
             return;
         }
 
+        if (!taskdescription.trim()) {
+          Alert.alert('Error', 'Por favor, introduce la descripcion del paso.');
+          return;
+      }
+
         // Verifica si se seleccionaron una imagen y un video
-        if (!imageUri) {
+        if (!imageUri  && !videoUri) {
             Alert.alert('Error', 'Por favor, selecciona una imagen.');
             return;
         }
 
 
-        // Crear el nuevo paso con texto, imagen y video
-        const newStep: Step = {
-            text: currentStepText,
-            imageUri: imageUri,
-        };
-
         // Añadir el paso a la lista
         setTaskSteps([...taskSteps, newStep]);
 
-        // Limpiar campos
-        setCurrentStepText('');
-        setImageUri(undefined);
+
+        
     };
   
   // Función para eliminar un paso
@@ -76,6 +119,10 @@ import { launchImageLibrary } from 'react-native-image-picker';
     setTaskSteps([]);
     setCurrentStepText('');
     setTaskDate('');
+    setTaskDescription('');
+    setImageUri(undefined);
+    setVideoUri(undefined);
+    
   };
 
   return (
@@ -99,39 +146,78 @@ import { launchImageLibrary } from 'react-native-image-picker';
                 keyboardType="numeric"
             />
 
-            <Text style={styles.label}>Paso de la tarea</Text>
+            <Text style={styles.label}>Paso a realizar</Text>
                 <TextInput
                 style={styles.input}
-                placeholder="Introduce un paso"
+                placeholder="Introduce el paso a realizar"
                 value={currentStepText}
                 onChangeText={setCurrentStepText}
+            />
+
+
+            <Text style={styles.label}>Descripcion del paso</Text>
+                <TextInput
+                style={styles.input}
+                placeholder="Introduce una descripcion del paso"
+                value={taskdescription}
+                onChangeText={setTaskDescription}
             />
 
             <TouchableOpacity style={styles.button} onPress={selectImage}>
                     <Text style={styles.buttonText}>Seleccionar Imagen</Text>
             </TouchableOpacity>
 
+            {<TouchableOpacity style={styles.button} onPress={selectVideo}>
+                <Text style={styles.buttonText}>Seleccionar Video</Text>
+            </TouchableOpacity>}
+
             <TouchableOpacity style={styles.button} onPress={addStep}>
                     <Text style={styles.buttonText}>Añadir Paso</Text>
             </TouchableOpacity>
 
             <FlatList
-                    data={taskSteps}
-                    renderItem={({ item, index }) => (
-                        <View style={styles.stepContainer}>
-                            <Text style={styles.stepText}>{index + 1}. {item.text}</Text>
-                            {item.imageUri && <Image source={{ uri: item.imageUri }} style={styles.imagePreview} />}
-                            <TouchableOpacity onPress={() => removeStep(index)} style={styles.deleteButton}>
-                                <Text style={styles.deleteButtonText}>Eliminar</Text>
-                            </TouchableOpacity>
-                        </View>
-                    )}
-                    keyExtractor={(item, index) => index.toString()}
-                    horizontal={true} 
-                    showsHorizontalScrollIndicator={true} 
-                    contentContainerStyle={{ flexDirection: 'row' }} 
-                    style={styles.stepsList}
-                                />
+              data={taskSteps}
+              renderItem={({ item, index }) => (
+                <View style={styles.stepContainer}>
+                  <Text style={styles.stepText}>
+                    {index + 1}. {item.text}
+                  </Text>
+                  <Text style={styles.stepDescription}>{item.description}</Text>
+                  {item.imageUri && (
+                    <Image source={{ uri: item.imageUri }} style={styles.imagePreview} />
+                  )}
+                  {item.videoUri && (
+                    <View style={{ alignItems: 'center' }}>
+                        <VideoView
+                            style={styles.videoPreview}
+                            player={useVideoPlayer(item.videoUri, (player) => {
+                                player.loop = true;
+                            })}
+                            allowsFullscreen
+                            allowsPictureInPicture
+                        />
+                        <Button
+                            title={isPlaying ? 'Pause' : 'Play'}
+                            onPress={togglePlayPause}
+                        />
+                    </View>
+                  )}
+
+                  <TouchableOpacity
+                    onPress={() => removeStep(index)}
+                    style={styles.deleteButton}
+                  >
+                    <Text style={styles.deleteButtonText}>Eliminar</Text>
+                  </TouchableOpacity>
+                </View>
+              )}
+              keyExtractor={(item, index) => index.toString()}
+              horizontal={true}
+              showsHorizontalScrollIndicator={true}
+              contentContainerStyle={{ flexDirection: 'row' }}
+              style={styles.stepsList}
+            />
+
             
             <TouchableOpacity style={styles.button} onPress={addTask}>
                     <Text style={styles.buttonText}>Añadir Tarea</Text>
@@ -142,6 +228,23 @@ import { launchImageLibrary } from 'react-native-image-picker';
 };
 
 const styles = StyleSheet.create({
+  videoPreview: {
+    width: 200,
+    height: 150,
+    marginTop: 10,
+    borderRadius: 8,
+    backgroundColor: '#000', 
+  },
+
+  stepDescription: {
+    fontSize: 14,
+    color: '#666',
+    marginBottom: 10,
+    width: 200, 
+    flexWrap: 'wrap', 
+    textAlign: 'left', 
+  },
+  
   formContainer: {
     padding: 20,
     backgroundColor: '#f0f9ff',

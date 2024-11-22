@@ -15,6 +15,10 @@ const HomeScreen: React.FC = () => {
     navigation.navigate('Galeria'); 
   };
 
+  const handleThirdButtonPress = () => {
+    navigation.navigate('LoginTeacher'); // Ejemplo de una nueva pantalla
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Colegio San Rafael</Text>
@@ -26,6 +30,9 @@ const HomeScreen: React.FC = () => {
       </View>
       <TouchableOpacity onPress={handleLeftPanelPress} style={styles.floatingButton}>
         <Text style={styles.text}>Admin</Text>
+      </TouchableOpacity>
+      <TouchableOpacity onPress={handleThirdButtonPress} style={styles.floatingButtonLeft}>
+        <Text style={styles.text}>Profesor</Text>
       </TouchableOpacity>
     </View>
   );
@@ -61,6 +68,22 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 20,
     right: 20,
+    backgroundColor: '#447ff6',
+    borderRadius: 50,
+    width: 80,
+    height: 80,
+    justifyContent: 'center',
+    alignItems: 'center',
+    elevation: 5, // Para sombra en Android
+    shadowColor: '#000', // Para sombra en iOS
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.3,
+    shadowRadius: 2,
+  },
+  floatingButtonLeft: {
+    position: 'absolute',
+    bottom: 20,
+    left: 20,
     backgroundColor: '#447ff6',
     borderRadius: 50,
     width: 80,

@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Image, StyleSheet, TouchableOpacity, ScrollView, Button, Alert } from 'react-native';
+import { View, Image, StyleSheet, TouchableOpacity,Text, ScrollView, Button, Alert } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/StackNavigator';
+import Icon from 'react-native-vector-icons/FontAwesome';
 
 const data = [
   { id: 1, uri: 'https://reactnative.dev/docs/assets/p_cat2.png' },
@@ -43,6 +44,15 @@ const SimpleTable: React.FC<LoginTextprops> = ({ ruta }) => {
 
   return (
     <ScrollView contentContainerStyle={styles.container}>
+      {Array.from({ length: 3 }).map((_, rowIndex) => (
+        <View key={rowIndex} style={styles.row}>
+          {data.slice(rowIndex * 3, rowIndex * 3 + 3).map((item) => (
+            <TouchableOpacity key={item.id} onPress={() => handleImagePress(item.id)} style={styles.cell}>
+              <Image source={{ uri: item.uri }} style={styles.image} />
+            </TouchableOpacity>
+          ))}
+        </View>
+      ))}
       <View style={styles.passwordContainer}>
         {password.length === 0 ? (
           <View style={styles.emptyMessage}>
@@ -55,19 +65,19 @@ const SimpleTable: React.FC<LoginTextprops> = ({ ruta }) => {
         )}
       </View>
 
-      {Array.from({ length: 3 }).map((_, rowIndex) => (
-        <View key={rowIndex} style={styles.row}>
-          {data.slice(rowIndex * 3, rowIndex * 3 + 3).map((item) => (
-            <TouchableOpacity key={item.id} onPress={() => handleImagePress(item.id)} style={styles.cell}>
-              <Image source={{ uri: item.uri }} style={styles.image} />
-            </TouchableOpacity>
-          ))}
-        </View>
-      ))}
-      <View style={styles.buttonContainer}>
-        <Button title="Enviar" onPress={handleSubmit} />
-        <Button title="Borrar" onPress={handleClear} color="red" />
-      </View>
+      
+    <View style={styles.buttonContainer}>
+      
+      <TouchableOpacity style={styles.button} onPress={handleClear}>
+        <Icon name="trash" size={40} color="red" />
+        <Text style={[styles.buttonText, { color: 'red' }]}>Borrar</Text>
+      </TouchableOpacity>
+      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
+        <Icon name="arrow-right" size={40} color="green" />
+        <Text style={[styles.buttonText, { color: 'green' }]}>Avanzar</Text>
+      </TouchableOpacity>
+      
+    </View>
     </ScrollView>
   );
 };
@@ -119,6 +129,17 @@ const styles = StyleSheet.create({
     justifyContent: 'space-between',
     width: '60%',
     marginBottom: 20,
+  },
+  button: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    padding: 10,
+    borderRadius: 5,
+  },
+  buttonText: {
+    marginLeft: 5,
+    fontSize: 16,
+    color: 'black',
   },
 });
 
