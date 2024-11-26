@@ -1,6 +1,7 @@
 // src/navigation/StackNavigator.tsx
 import React from 'react';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+
 import HomeScreen from '../screen/HomeScreen';
 import GalleryScreen from '../screen/GalleryScreen';
 import LoginAdminScreen from '@/screen/LoginAdminScreen';
@@ -18,13 +19,16 @@ import EraseTeacherScreen from '@/screen/EraseTeacherScreen';
 import UserMenuScreen from '@/screen/UserMenuScreen';
 import UserTaskScreen from '@/screen/UserTaskScreen';
 import MenuStudentScreen from '@/screen/MenuStudentScreen';
-import ModififySkillsScreen from '@/screen/ModifySkillsScreen';
+import ModifySkillsScreen from '@/screen/ModifySkillsScreen';
 import NumeroMenuScreen from '@/screen/NumeroMenuScreen';
 import AssignTaskScreen from '@/screen/AssignTaskScreen';
 import RequestMaterials from '@/screen/RequestMaterialsScreen';
 import ListStudentScreen from '@/screen/ListStudentScreen';
-
-
+import TaskScreen from '@/screen/TaskScreen';
+import StudentsScreen from '@/screen/StudentsScreen';
+import TeacherAdminScreen from '@/screen/TeacherAdminScreen';
+import AssignMaterialsRequestsScreen from '@/screen/AssingMaterialsRequestsScreen';
+import SpecificTaskScreen from '@/screen/SpecificTaskScreen';
 
 export type RootStackParamList = {
   Home: undefined;
@@ -36,19 +40,24 @@ export type RootStackParamList = {
   Teacher:undefined;
   TaskMenu: undefined;
   RegisterStudent: undefined;
-  ModifyStudent: undefined;
-  EraseStudent: undefined;
+  ModifyStudent: { name: string };
+  EraseStudent: { name: string };
   RegisterTeacher: undefined;
   EraseTeacher: undefined;
   UserMenuScreen : undefined;
   UserTaskScreen : undefined;
-  ModifySkillsScreen : undefined;
+  ModifySkillsScreen : { name: string };
   RequestMaterials: undefined;
   ModifyTeacher: undefined;
+  TaskScreen: undefined;
   ListStudent: undefined;
   MenuStudentScreen: {taskCompleted: boolean, nombreAula: string};
   AssignTaskScreen: undefined;
   NumeroMenuScreen: { nombreAula: string, imageAula:string};
+  StudentsScreen: undefined;
+  TeacherAdminScreen: undefined;
+  SpecificTaskScreen: undefined;
+  AssignMaterialsRequestsScreen: {name: string};
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -73,11 +82,16 @@ const StackNavigator: React.FC = () => {
       <Stack.Screen name="ModifyTeacher" component={ModifyTeacherScreen}/>
       <Stack.Screen name="UserMenuScreen" component= {UserMenuScreen}/>
       <Stack.Screen name="UserTaskScreen" component= {UserTaskScreen}/>
-      <Stack.Screen name="ModifySkillsScreen" component= {ModififySkillsScreen}/>
+      <Stack.Screen name="ModifySkillsScreen" component= {ModifySkillsScreen}/>
       <Stack.Screen name="MenuStudentScreen" component= {MenuStudentScreen}/>
       <Stack.Screen name="NumeroMenuScreen" component= {NumeroMenuScreen}/>
       <Stack.Screen name="AssignTaskScreen" component= {AssignTaskScreen}/>
       <Stack.Screen name="ListStudent" component= {ListStudentScreen}/>    
+      <Stack.Screen name="TaskScreen" component= {TaskScreen}/>    
+      <Stack.Screen name="StudentsScreen" component= {StudentsScreen}/>    
+      <Stack.Screen name="TeacherAdminScreen" component= {TeacherAdminScreen}/>
+      <Stack.Screen name="AssignMaterialsRequestsScreen" component= {AssignMaterialsRequestsScreen}/>
+      <Stack.Screen name="SpecificTaskScreen" component= {SpecificTaskScreen}/>    
     </Stack.Navigator>
   );
 };

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet,Text,Image } from 'react-native';
 import AdminMenu from '../components/AdminMenu'; 
-import UserMenuScreen from './UserMenuScreen';
+import SpecificTaskScreen from './SpecificTaskScreen';
 import MenuStudent from '@/components/MenuStudent';
 
 const MenuStudentScreen: React.FC = () => {
@@ -51,15 +51,15 @@ const MenuStudentScreen: React.FC = () => {
     const datos = [
         {
             nombreAula: 'Lavarse los dientes',
-            image: 'https://reactnative.dev/docs/assets/p_cat2.png',
+            imageAula: 'https://reactnative.dev/docs/assets/p_cat2.png',
         },
         {
             nombreAula: 'Ir a por inventario',
-            image: 'https://reactnative.dev/docs/assets/p_cat2.png',
+            imageAula: 'https://reactnative.dev/docs/assets/p_cat2.png',
         },
         {
             nombreAula: 'Hacer deberes',
-            image: 'https://reactnative.dev/docs/assets/p_cat2.png',
+            imageAula: 'https://reactnative.dev/docs/assets/p_cat2.png',
         },
     ];
 
@@ -68,7 +68,7 @@ const MenuStudentScreen: React.FC = () => {
             {/* Componente MenuStudent con props */}
             <Text style={styles.title}>TAREAS DISPONIBLES</Text>
             <Image source={{ uri:'https://reactnative.dev/docs/assets/p_cat2.png' }} style={styles.image} />
-            <MenuStudent ruta="NumeroMenuScreen" datos={datos} /> 
+            <MenuStudent ruta="SpecificTaskScreen" datos={datos} /> 
         </View>
     );
 };

@@ -1,13 +1,14 @@
 import React from 'react';
-import { View, StyleSheet} from 'react-native';
+import { View, StyleSheet, Text} from 'react-native';
 import ModifyStudent from  '../components/ModifyStudent'; 
 
 
 
-const ModifyStudentScreen: React.FC = () =>{
-return(
+const ModifyStudentScreen: React.FC = ({ route }) =>{
+  const { name } = route.params;
+  return(
     <View style={styles.container}>
-        <ModifyStudent ruta='Admin'/>
+      <ModifyStudent ruta='Admin' name={name}/>
     </View>
   );
 };

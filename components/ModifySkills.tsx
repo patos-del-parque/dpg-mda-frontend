@@ -6,65 +6,49 @@ import { RootStackParamList } from '../navigation/StackNavigator';
 
 interface RegisterStudentprops {
   ruta: String;
+  name: String;
 }
 
-    const ModifySkills: React.FC<RegisterStudentprops> = ({ ruta }) => {
-      const [selectLevel, setSelectedLevel] = useState("");
-      const [estudiantes, setEstudiantes] = useState([]);
-      const [selectedEstudiante, setSelectedEstudiante] = useState(null);
-      const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+const ModifySkills: React.FC<RegisterStudentprops> = ({ ruta, name }) => {
+  const [selectLevel, setSelectedLevel] = useState("");
+  const [estudiantes, setEstudiantes] = useState([]);
+  const [selectedEstudiante, setSelectedEstudiante] = useState(null);
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-      const pressLoginButton = async () => {
-        navigation.navigate(ruta as keyof RootStackParamList);
-  
-      };
+  const pressLoginButton = async () => {
+    navigation.navigate(ruta as keyof RootStackParamList);
 
-      useEffect(() => {
-        fetch('http://localhost:27017/estudiantes') 
-          .then(response => response.json())
-          .then(data => setEstudiantes(data))
-          .catch(error => console.error(error));
-      }, []);
-  
+  };
 
-      return(
-        <View style={styles.formContainer}>
-            <Text style={styles.title}>Modificar Habilidades Estudiante</Text>
+  useEffect(() => {
+    fetch('http://localhost:27017/estudiantes') 
+      .then(response => response.json())
+      .then(data => setEstudiantes(data))
+      .catch(error => console.error(error));
+  }, []);
 
-            <Text style={styles.label}>Estudiante</Text>
-            <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={selectedEstudiante}
-                onValueChange={(itemValue) => setSelectedEstudiante(itemValue)}
-                style={styles.picker}
-              >
-                <Picker.Item label="Selecciona un estudiante" value={null} color="#004d40" />
-                {estudiantes.map(estudiante => (
-                  <Picker.Item
-                    //key={estudiante._id}
-                    //label={estudiante.nombre} coge de la bd 
-                    color="#004d40"
-                  />
-                ))}
-              </Picker>
-            </View>
-                  
-            <Text style={styles.label}>Nuevo nivel</Text>
-            <View style={styles.pickerContainer}>
-            <Picker
-              selectedValue={selectLevel}
-              onValueChange={(itemValue) => setSelectedLevel(itemValue)}
-              style={styles.picker}
-            >
-              <Picker.Item label="Nivel 1" value="Nivel1" color="#004d40"/>
-              <Picker.Item label="Nivel 2" value="Nivel2" color="#004d40"/>
-              <Picker.Item label="Nivel 3" value="Nivel3" color="#004d40"/>
-            </Picker>
-          </View>
-          <Pressable style={styles.button} onPress={pressLoginButton}>
-            <Text style={styles.buttonText}>Aplicar Cambios</Text>
-          </Pressable>
-        </View>
+
+  return(
+    <View style={styles.formContainer}>
+        <Text style={styles.title}>Modificar Habilidades Estudiante</Text>
+
+        <Text style={styles.label}>Estudiante: {name}</Text>
+        <Text style={styles.label}>Nuevo nivel</Text>
+        <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={selectLevel}
+          onValueChange={(itemValue) => setSelectedLevel(itemValue)}
+          style={styles.picker}
+        >
+          <Picker.Item label="Nivel 1" value="Nivel1" color="#004d40"/>
+          <Picker.Item label="Nivel 2" value="Nivel2" color="#004d40"/>
+          <Picker.Item label="Nivel 3" value="Nivel3" color="#004d40"/>
+        </Picker>
+      </View>
+      <Pressable style={styles.button} onPress={pressLoginButton}>
+        <Text style={styles.buttonText}>Aplicar Cambios</Text>
+      </Pressable>
+    </View>
   );
 };
 

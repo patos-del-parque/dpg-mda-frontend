@@ -20,7 +20,7 @@ interface RegisterTeacherprops {
         const response = await fetch('http://localhost:27017/api/students/add-student', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nombre, apellidos, DNI, edad: parseInt(edad), especialidad, password }),
+            body: JSON.stringify({ nombre, password }),
         });
         const result = await response.json();
         alert(result.message || 'Profesor agregado exitosamente');
@@ -30,10 +30,6 @@ interface RegisterTeacherprops {
     };
 
     const [nombre, setNombre] = useState('');
-    const [apellidos, setApellidos] = useState('');
-    const [DNI, setDNI] = useState('');
-    const [edad, setEdad] = useState('');
-    const [especialidad, setEspecialidad] = useState('');
     const [password, setPasswpord] = useState("");
 
     return(
@@ -42,21 +38,9 @@ interface RegisterTeacherprops {
     
             <Text style={styles.label}>Nombre</Text>
             <TextInput style={styles.input} value={nombre} onChangeText={setNombre} placeholder="Introduce el nombre" />
-    
-            <Text style={styles.label}>Apellidos</Text>
-            <TextInput style={styles.input} value={apellidos} onChangeText={setApellidos} placeholder="Introduce los apellidos" />
-    
-            <Text style={styles.label}>DNI</Text>
-            <TextInput style={styles.input} value={DNI} onChangeText={setDNI} placeholder="Introduce el DNI" />
-    
-            <Text style={styles.label}>Especialidad</Text>
-            <TextInput style={styles.input} value={especialidad} onChangeText={setEspecialidad} placeholder="Introduce la especialidad" />
-    
-            <Text style={styles.label}>Edad</Text>
-            <TextInput style={styles.input} value={edad} onChangeText={setEdad} placeholder="Introduce la edad" keyboardType="numeric" />
-
-          <Text style={styles.label}>Contraseña</Text>
-          <TextInput style={styles.input} value={password} onChangeText={setPasswpord} placeholder="Introduce la contraseña" keyboardType="numeric" />
+       
+            <Text style={styles.label}>Contraseña</Text>
+            <TextInput style={styles.input} value={password} onChangeText={setPasswpord} placeholder="Introduce la contraseña" keyboardType="numeric" />
  
             <Pressable style={styles.button} onPress={pressLoginButton}>
             <Text style={styles.buttonText}>Registrar</Text>

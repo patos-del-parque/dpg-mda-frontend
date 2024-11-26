@@ -1,13 +1,15 @@
 import React from 'react';
-import { View, StyleSheet} from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import ModifySkills from  '../components/ModifySkills'; 
 
 
 
-const ModifySkillsScreen: React.FC = () =>{
-return(
+const ModifySkillsScreen: React.FC = ({ route }) =>{
+
+  const { name } = route.params;
+  return(
     <View style={styles.container}>
-        <ModifySkills ruta='Admin'/>
+      <ModifySkills ruta='Admin' name={name}/>
     </View>
   );
 };

@@ -7,7 +7,7 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 
 type NumeroMenuScreenRouteProp = RouteProp<RootStackParamList, 'NumeroMenuScreen'>;
 
-const NumeroMenuScreen: React.FC = () => {
+const NumeroMenu: React.FC = () => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const route = useRoute<NumeroMenuScreenRouteProp>();
     const { nombreAula, imageAula } = route.params; // Obtiene el nombre del aula pasado como parámetro
@@ -17,6 +17,7 @@ const NumeroMenuScreen: React.FC = () => {
         { id: 2, title: 'MENU 2',  description: 'Triturado', image: 'https://reactnative.dev/docs/assets/p_cat2.png' },
         { id: 3, title: 'MENU 3',  description: 'Vegetariano', image: 'https://reactnative.dev/docs/assets/p_cat2.png' },
     ];
+
 
     const [menuIndex, setMenuIndex] = useState(0);
     const handleNextMenu = () => {
@@ -210,4 +211,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default NumeroMenuScreen;
+export default NumeroMenu;

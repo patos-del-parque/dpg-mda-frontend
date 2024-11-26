@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { ScrollView, View, Text, Image,  TextInput,Alert, StyleSheet, Button, FlatList, TouchableOpacity } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker'; 
 import { useVideoPlayer, VideoView } from 'expo-video';
+import * as DocumentPicker from 'expo-document-picker';
 
 type Step = {
     text: string;
@@ -31,10 +32,12 @@ type Step = {
 
         // Función para seleccionar una imagen
     const selectImage = async () => {
-        const result = await launchImageLibrary({
-            mediaType: 'photo',
-            includeBase64: false,
-        });
+      const result = await launchImageLibrary({
+        mediaType: 'photo', 
+        includeBase64: false, 
+      });
+
+      console.log(result);
 
         if (result.assets && result.assets.length > 0) {
             setImageUri(result.assets[0].uri);
@@ -44,15 +47,20 @@ type Step = {
     };
 
     const selectVideo = async () => {
-      const result = await launchImageLibrary({
-          mediaType: 'video',
-          includeBase64: false,
-      });
-  
-      if (result.assets && result.assets.length > 0) {
-          setVideoUri(result.assets[0].uri);
-      } else {
+      try {
+        const result = await DocumentPicker.getDocumentAsync({
+          type: 'video/*',
+        });
+
+        if (result.assets && result.assets.length > 0) {
+          const videoUri = result.assets[0].uri;
+          setVideoUri(videoUri); 
+        } else {
           Alert.alert('Error', 'Por favor, selecciona un video.');
+        }
+      } catch (error) {
+        console.error(error);
+        Alert.alert('Error', 'Hubo un problema al seleccionar el video.');
       }
     };
 
@@ -92,6 +100,12 @@ type Step = {
             return;
         }
 
+        const newStep: Step = {
+          description: taskdescription,
+          text: currentStepText,
+          imageUri: imageUri,
+          videoUri: videoUri,
+      };
 
         // Añadir el paso a la lista
         setTaskSteps([...taskSteps, newStep]);
@@ -125,6 +139,7 @@ type Step = {
     
   };
 
+  
   return (
     <View style={styles.formContainer}>
         <Text style={styles.title}>Crear Tareas</Text>
@@ -190,9 +205,7 @@ type Step = {
                     <View style={{ alignItems: 'center' }}>
                         <VideoView
                             style={styles.videoPreview}
-                            player={useVideoPlayer(item.videoUri, (player) => {
-                                player.loop = true;
-                            })}
+                            player={player}
                             allowsFullscreen
                             allowsPictureInPicture
                         />
@@ -201,7 +214,8 @@ type Step = {
                             onPress={togglePlayPause}
                         />
                     </View>
-                  )}
+                )}
+
 
                   <TouchableOpacity
                     onPress={() => removeStep(index)}

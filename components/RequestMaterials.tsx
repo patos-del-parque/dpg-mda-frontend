@@ -31,10 +31,15 @@ interface RequestMaterialsprops {
 
     const [Material, setMaterial] = useState('');
     const [Cantidad, setCantidad] = useState('');
+    const [Clase, setClase] = useState('');
+
 
     return(
         <View style={styles.formContainer}>
             <Text style={styles.title}>Solicitar Material</Text>
+
+            <Text style={styles.label}>Clase a donde llevar el material</Text>
+            <TextInput style={styles.input} value={Clase} onChangeText={setClase} placeholder="Introduce la clase a donde llevar el material" />
     
             <Text style={styles.label}>Nombre del material</Text>
             <TextInput style={styles.input} value={Material} onChangeText={setMaterial} placeholder="Introduce el nombre del material" />

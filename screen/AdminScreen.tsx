@@ -7,17 +7,9 @@ const AdminScreen: React.FC = () =>{
 return(
     <View style={styles.container}>
       <Text style={styles.title}>Panel de Administración</Text>
-      <AdminMenu route='TaskMenu' label='Crear Tareas' iconName='tasks' />
-      <AdminMenu route='AssignTaskScreen' label='Asignar Tareas' iconName='user-plus' />
-      <AdminMenu route='TaskMenu' label='Ver Estado de Tareas' iconName='check-circle' />
-      <AdminMenu route='RegisterStudent' label='Dar de alta a estudiante' iconName='user' />
-      <AdminMenu route='ModifyStudent' label='Modificar datos estudiante' iconName='edit' />
-      <AdminMenu route='EraseStudent' label='Dar de baja a alumno' iconName='user' />
-      <AdminMenu route='ModifySkillsScreen' label='Modificar habilidades del estudiante' iconName='edit' />
-      <AdminMenu route='RegisterTeacher' label='Dar de alta a profesor' iconName='user' />
-      <AdminMenu route='ModifyTeacher' label='Modificar datos profesor' iconName='edit' />
-      <AdminMenu route='EraseTeacher' label='Dar de baja a profesor' iconName='user' />
-      <AdminMenu route='ListStudent' label='Lista de alumnos' iconName='user' />
+      <AdminMenu route='TaskScreen' label='Tareas' iconName='tasks' />   
+      <AdminMenu route='StudentsScreen' label='Estudiantes' iconName='user' />  
+      <AdminMenu route='TeacherAdminScreen' label='Profesores' iconName='user' />     
     </View>
   );
 };

@@ -15,8 +15,10 @@ interface RegisterStudentprops {
       const [estudiantes, setEstudiantes] = useState<any[]>([]);
       const [tareas, setTareas] = useState<any[]>([]);
       const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-      const [tipoVista, setTipoVista] = useState("texto");
       const [tamanoVista, setTamanoVista] = useState("entera");
+      const [lectura, setLectura] = useState(false);
+      const [imagen, setImagen] = useState(false);
+      const [video, setVideo] = useState(false);
 
       const pressLoginButton = async () => {
         if (!selectedEstudiante || !selectedTarea) {
@@ -28,8 +30,10 @@ interface RegisterStudentprops {
         const datosAsignacion = {
           estudianteId: selectedEstudiante._id, 
           tareaId: selectedTarea._id, 
-          tipoVista: tipoVista, 
           tamanoVista: tamanoVista, 
+          lectura: lectura,
+          imagen: imagen,
+          video: video,         
         };
     
         try {
@@ -110,15 +114,32 @@ interface RegisterStudentprops {
             </View>  
 
           <Text style={styles.label}>Tipo de vista</Text>
-            <Picker
-              selectedValue={tipoVista}
-              onValueChange={(itemValue) => setTipoVista(itemValue)}
-              style={styles.picker}
+          <View>
+            <TouchableOpacity
+              style={styles.checkboxContainer}
+              onPress={() => setLectura(!lectura)}
             >
-              <Picker.Item label="Texto" value="texto" />
-              <Picker.Item label="Imagen" value="imagen" />
-              <Picker.Item label="Video" value="video" />
-            </Picker>
+              <View style={[styles.checkbox, lectura && styles.checkboxSelected]} />
+              <Text style={styles.checkboxLabel}>Lectura</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.checkboxContainer}
+              onPress={() => setImagen(!imagen)}
+            >
+              <View style={[styles.checkbox, imagen && styles.checkboxSelected]} />
+              <Text style={styles.checkboxLabel}>Imagen</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              style={styles.checkboxContainer}
+              onPress={() => setVideo(!video)}
+            >
+              <View style={[styles.checkbox, video && styles.checkboxSelected]} />
+              <Text style={styles.checkboxLabel}>Video</Text>
+            </TouchableOpacity>
+          </View>
+            
 
             <Text style={styles.label}>Tamaño de vista</Text>
             <Picker
@@ -152,6 +173,26 @@ app.post('/estudiantes/asignarTarea', (req, res) => {
 */
 
 const styles = StyleSheet.create({
+  checkboxContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginBottom: 10,
+  },
+  checkbox: {
+    width: 20,
+    height: 20,
+    borderWidth: 1,
+    borderColor: '#004d40',
+    marginRight: 10,
+    borderRadius: 4,
+  },
+  checkboxSelected: {
+    backgroundColor: '#004d40',
+  },
+  checkboxLabel: {
+    fontSize: 16,
+    color: '#004d40',
+  },
   configContainer: {
     marginTop: 20,
     width: '100%',

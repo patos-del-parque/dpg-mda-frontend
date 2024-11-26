@@ -1,44 +1,49 @@
 // screens/GalleryScreen.tsx
-import React, { useState, useEffect } from 'react';
-import { View, ScrollView, StyleSheet, Text } from 'react-native';
-import UserCard from '../components/AlonsoCard';
-import { Button } from 'react-native-elements';
+import React, { useState } from 'react';
+import { View, ScrollView, StyleSheet, Text, Animated } from 'react-native';
+import UserCard from '../components/UserCard';
 
 const GalleryScreen: React.FC = () => {
   const users = [
     { name: 'Mario Medina Lopez', email: 'juan@example.com' },
     { name: 'Carlos Fernandez Arrabal', email: 'ana@example.com' },
     { name: 'Silvia Fernandez Arrabal', email: 'luis@example.com' },
-    { name: 'Alonso Doña Martinez', email: 'alonsodmx@gmail.com'},
-    // Agrega más usuarios aquí
+    { name: 'Alonso Doña Martinez', email: 'alonsodmx@gmail.com' },
   ];
-  /* const [users, setUsers] = useState<{ name: string; email: string }[]>([]);
-  useEffect(() => {
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch('https://api.jsdu9873.tech/api/usuarios');
-        const data = await response.json();
-        const formattedUsers = data.listaUsuarios.map((user: { nombre: string; email: string }) => ({
-          name: user.nombre,
-          email: user.email,
-        }));
-        setUsers(formattedUsers);
-      } catch (error) {
-        console.error("Error al obtener los usuarios:", error);
-      }
-    };
 
-    fetchUsers();
-  }, []); */
+  const [scaleValues] = useState(users.map(() => new Animated.Value(1)));
+
+  const handleMouseEnter = (index: number) => {
+    Animated.spring(scaleValues[index], {
+      toValue: 1.1,
+      useNativeDriver: true,
+    }).start();
+  };
+
+  const handleMouseLeave = (index: number) => {
+    Animated.spring(scaleValues[index], {
+      toValue: 1,
+      useNativeDriver: true,
+    }).start();
+  };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>Estudiantes</Text>
-      <ScrollView contentContainerStyle={styles.scrollContent}>
-        {users.map((user, index) => (
-          <UserCard key={index} name={user.name} urlPhoto={user.email} estado={0}/>
-        ))}
-      </ScrollView>
+      <View style={styles.gradient}>
+        <Text style={styles.title}>Estudiantes</Text>
+        <ScrollView contentContainerStyle={styles.scrollContent}>
+          {users.map((user, index) => (
+            <Animated.View
+              key={index}
+              style={[styles.card, { transform: [{ scale: scaleValues[index] }] }]}
+              onMouseEnter={() => handleMouseEnter(index)}
+              onMouseLeave={() => handleMouseLeave(index)}
+            >
+              <UserCard name={user.name} urlPhoto={user.email} estado={0} />
+            </Animated.View>
+          ))}
+        </ScrollView>
+      </View>
     </View>
   );
 };
@@ -46,13 +51,24 @@ const GalleryScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: '#1E3A8A',
+  },
+  gradient: {
+    flex: 1,
+    backgroundColor: 'transparent',
     padding: 16,
-    backgroundColor: '#f9fafc',
+    borderBottomLeftRadius: 40,
+    borderBottomRightRadius: 40,
+    shadowColor: '#60A5FA',
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.4,
+    shadowRadius: 20,
+    elevation: 5,
   },
   title: {
-    fontSize: 24,
+    fontSize: 26,
     fontWeight: 'bold',
-    color: '#333',
+    color: '#FFF',
     marginBottom: 16,
     textAlign: 'center',
   },
@@ -60,6 +76,18 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     flexWrap: 'wrap',
     justifyContent: 'space-around',
+  },
+  card: {
+    backgroundColor: '#FFF',
+    borderRadius: 10,
+    padding: 10,
+    margin: 10,
+    width: '40%',
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 4 },
+    shadowOpacity: 0.3,
+    shadowRadius: 6,
+    elevation: 5,
   },
 });
 

@@ -10,7 +10,7 @@ return(
     <View style={styles.container}>
       <Text style={styles.title}>AULAS DISPONIBLES</Text>
       <Image source={{ uri:'https://logosnurseryschool.es/nursery/wp-content/uploads/2016/07/Instalaciones-logos-nursery-comedor-1.jpg' }} style={styles.image} />
-      < MenuStudent ruta='NumeroMenuScreen'datos={[
+      < MenuStudent ruta='NumeroMenuScreen' datos={[
         {
             nombreAula: 'AULA 1',
             imageAula: 'https://www.solerpalau.com/es-es/blog/wp-content/uploads/2021/01/Confort-termico-colegios.jpg',

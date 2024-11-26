@@ -6,6 +6,8 @@ import { useEffect, useState } from 'react';
 import { View, Text, ActivityIndicator, StyleSheet } from 'react-native';
 import { useVideoPlayer, VideoView } from 'expo-video';
 
+import { NavigationIndependentTree } from '@react-navigation/native';
+
 const styles = StyleSheet.create({
   container: { flex: 1, justifyContent: 'center', alignItems: 'center' },
   dataText: { fontSize: 16, color: '#333' },
@@ -75,9 +77,11 @@ const App: React.FC = () => {
   */
 
   return (
-    <NavigationContainer independent={true}>
-      <StackNavigator/>
-    </NavigationContainer>
+    <NavigationIndependentTree>
+      <NavigationContainer>
+        <StackNavigator/>
+      </NavigationContainer>
+    </NavigationIndependentTree>
   );
 };
 

@@ -2,41 +2,40 @@ import React, { useState } from 'react';
 import { View, Text,  TextInput, StyleSheet, Pressable } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/StackNavigator';
-import { Picker } from '@react-native-picker/picker';
 
 
 interface EraseStudentprops {
     ruta: String;
+    name: String;
   }
   
-  const EraseStudent: React.FC<EraseStudentprops> = ({ ruta }) => {
-  
-    const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-  
-    const pressLoginButton = async () => {
-      navigation.navigate(ruta as keyof RootStackParamList);
+const EraseStudent: React.FC<EraseStudentprops> = ({ ruta, name }) => {
 
-      try {
-        const response = await fetch('http://localhost:27017/api/students/add-student', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({DNI}),
-        });
-        const result = await response.json();
-        alert(result.message || 'Estudiante borrado exitosamente');
-    } catch (error) {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const pressLoginButton = async () => {
+    navigation.navigate(ruta as keyof RootStackParamList);
+
+    try {
+      const response = await fetch('http://localhost:27017/api/students/add-student', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({Nombre}),
+      });
+      const result = await response.json();
+      alert(result.message || 'Estudiante borrado exitosamente');
+      } catch (error) {
         alert('Error al borrar al estudiante');
-    }
+      }
     };
 
-    const [DNI, setDNI] = useState('');
+    const [Nombre, setNombre] = useState('');
 
     return(
         <View style={styles.formContainer}>
-            <Text style={styles.title}>Dar de baja Alumno</Text>
+            <Text style={styles.title}>Dar de baja Estudiante</Text>
     
-            <Text style={styles.label}>DNI</Text>
-            <TextInput style={styles.input} value={DNI} onChangeText={setDNI} placeholder="Introduce el DNI" />
+            <Text style={styles.label}>Estudiante: {name}</Text>
     
             <Pressable style={styles.button} onPress={pressLoginButton}>
             <Text style={styles.buttonText}>Dar de baja</Text>

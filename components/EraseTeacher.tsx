@@ -20,7 +20,7 @@ interface EraseTeacherprops {
         const response = await fetch('http://localhost:27017/api/students/add-student', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({DNI}),
+            body: JSON.stringify({Nombre}),
         });
         const result = await response.json();
         alert(result.message || 'Profesor borrado exitosamente');
@@ -29,14 +29,14 @@ interface EraseTeacherprops {
     }
     };
 
-    const [DNI, setDNI] = useState('');
+    const [Nombre, setNombre] = useState('');
 
     return(
         <View style={styles.formContainer}>
             <Text style={styles.title}>Dar de baja Profesor</Text>
     
-            <Text style={styles.label}>DNI</Text>
-            <TextInput style={styles.input} value={DNI} onChangeText={setDNI} placeholder="Introduce el DNI" />
+            <Text style={styles.label}>Nombre</Text>
+            <TextInput style={styles.input} value={Nombre} onChangeText={setNombre} placeholder="Introduce el Nombre" />
     
             <Pressable style={styles.button} onPress={pressLoginButton}>
             <Text style={styles.buttonText}>Dar de baja</Text>

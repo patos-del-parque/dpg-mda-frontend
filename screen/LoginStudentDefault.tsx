@@ -2,7 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import SimpleTable from '../components/SimpleTable';
 import { RouteProp, useRoute } from '@react-navigation/native';
-import UserCard from '@/components/AlonsoCard';
+import UserCard from '@/components/UserCard';
  
 
 type LoginStudentDefaultRouteProp = RouteProp<RootStackParamList, 'LoginStudentDefault'>;

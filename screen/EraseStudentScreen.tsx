@@ -1,13 +1,15 @@
 import React from 'react';
-import { View, StyleSheet } from 'react-native';
+import { View, StyleSheet, Text } from 'react-native';
 import EraseStudent from '../components/EraseStudent';
 
 
 
-const EraseStudentScreen: React.FC = () =>{
-return(
+const EraseStudentScreen: React.FC = ({ route }) =>{
+  const { name } = route.params;
+  return(
     <View style={styles.container}>
-        <EraseStudent  ruta='Admin'/>
+      <Text>{name}</Text>
+      <EraseStudent  ruta='Admin' name={name}/>
     </View>
   );
 };

@@ -1,6 +1,5 @@
 import React from 'react';
 import { Text, StyleSheet, Image, View, TouchableOpacity } from 'react-native';
-import { Card } from 'react-native-elements';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/StackNavigator';
 
@@ -17,38 +16,37 @@ const UserCardWithButton: React.FC<UserCardWithButtonProps> = ({ name, urlPhoto,
         <View style={styles.card}>
             <Text style={styles.name}>{name}</Text>
             <Image
-                source={{ uri: urlPhoto }} // Usa la URL de la imagen pasada como prop
-                style={styles.image}
+              source={{ uri: urlPhoto }} // Usa la URL de la imagen pasada como prop
+              style={styles.image}
             />
             <View style={styles.buttonContainer}>
-                <TouchableOpacity
+              <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate('AssignTaskScreen')
-                }
-                >
-                <Text style={styles.buttonText}>A</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
+                onPress={() => navigation.navigate('AssignMaterialsRequestsScreen', {name})}
+              >
+                <Text style={styles.buttonText}>Asignar Tarea Material</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate('RegisterStudent')
-                }
-                >
-                <Text style={styles.buttonText}>R</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
+                onPress={() => navigation.navigate('ModifySkillsScreen', {name})}
+              >
+                <Text style={styles.buttonText}>Modificar Habilidad</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate('ModifyStudent')
-                }
-                >
-                <Text style={styles.buttonText}>M</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
+                onPress={() => navigation.navigate('ModifyStudent', {name})}
+              >
+                <Text style={styles.buttonText}>Modificar Estudiante</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate('EraseStudent')
-                }
-                >
-                <Text style={styles.buttonText}>B</Text>
-                </TouchableOpacity>
+                onPress={() => navigation.navigate('EraseStudent', {name})}
+              >
+                <Text style={styles.buttonText}>Borrar Estudiante</Text>
+              </TouchableOpacity>
             </View>
         </View>
     );
@@ -76,10 +74,10 @@ const styles = StyleSheet.create({
         resizeMode: 'cover', // Puede usar 'contain' si lo prefieres
     },
       buttonContainer: {
-        flexDirection: 'row',
+        /* flexDirection: 'row',
         justifyContent: 'space-between',
         flexWrap: 'wrap',
-        width: '100%',
+        width: '100%', */
       },
       button: {
         backgroundColor: '#007BFF',
@@ -88,7 +86,6 @@ const styles = StyleSheet.create({
         margin: 4,
         alignItems: 'center',
         justifyContent: 'center',
-        width: 60, // Ancho fijo para cada botón
       },
       buttonText: {
         color: '#fff',

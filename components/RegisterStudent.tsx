@@ -1,8 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text,  TextInput, StyleSheet, Alert, Pressable } from 'react-native';
+import { View, Text,TouchableOpacity , TextInput, StyleSheet, Alert, Pressable } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/StackNavigator';
-import CheckBox from '@react-native-community/checkbox';
+// import CheckBox from '@react-native-community/checkbox';
 
 interface RegisterStudentprops {
     ruta: String;
@@ -20,7 +20,7 @@ interface RegisterStudentprops {
         const response = await fetch('https://api.jsdu9873.tech/api/students/add-student', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nombre, apellidos, edad: parseInt(edad) ,aula, password }),
+            body: JSON.stringify({ nombre,curso, password }),
         });
         const result = await response.json();
         if (response.ok) {
@@ -35,9 +35,7 @@ interface RegisterStudentprops {
     };
 
     const [nombre, setNombre] = useState('');
-    const [apellidos, setApellidos] = useState('');
-    const [edad, setEdad] = useState('');
-    const [aula, setAula] = useState('');
+    const [curso, setCurso] = useState('');
     const [password, setPasswpord] = useState("");
     const [lectura, setLectura] = useState(false);
     const [imagen, setImagen] = useState(false);
@@ -51,33 +49,36 @@ interface RegisterStudentprops {
             <Text style={styles.label}>Nombre</Text>
             <TextInput style={styles.input} value={nombre} onChangeText={setNombre} placeholder="Introduce el nombre" />
     
-            <Text style={styles.label}>Apellidos</Text>
-            <TextInput style={styles.input} value={apellidos} onChangeText={setApellidos} placeholder="Introduce los apellidos" />
-    
+             
             <Text style={styles.label}>Aula</Text>
-            <TextInput style={styles.input} value={aula} onChangeText={setAula} placeholder="Introduce el curso" />
-    
-            <Text style={styles.label}>Edad</Text>
-            <TextInput style={styles.input} value={edad} onChangeText={setEdad} placeholder="Introduce la edad" keyboardType="numeric" />
+            <TextInput style={styles.input} value={curso} onChangeText={setCurso} placeholder="Introduce el aula" />
 
-           {/*  <Text style={styles.label}>Lectura</Text>
-            <CheckBox
-              value={lectura}
-              onValueChange={setLectura}
-              tintColors={{ true: '#00f', false: '#f00' }} 
-            />
-            <Text style={styles.label}>Imagen</Text>
-            <CheckBox
-              value={imagen}
-              onValueChange={setImagen}
-              tintColors={{ true: '#00f', false: '#f00' }} 
-            />
-            <Text style={styles.label}>Video</Text>
-            <CheckBox
-              value={video}
-              onValueChange={setVideo}
-              tintColors={{ true: '#00f', false: '#f00' }} 
-            />  */}
+            <Text style={styles.label}>Tipo de vista</Text>
+            <View>
+              <TouchableOpacity
+                style={styles.checkboxContainer}
+                onPress={() => setLectura(!lectura)}
+              >
+                <View style={[styles.checkbox, lectura && styles.checkboxSelected]} />
+                <Text style={styles.checkboxLabel}>Lectura</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.checkboxContainer}
+                onPress={() => setImagen(!imagen)}
+              >
+                <View style={[styles.checkbox, imagen && styles.checkboxSelected]} />
+                <Text style={styles.checkboxLabel}>Imagen</Text>
+              </TouchableOpacity>
+
+              <TouchableOpacity
+                style={styles.checkboxContainer}
+                onPress={() => setVideo(!video)}
+              >
+                <View style={[styles.checkbox, video && styles.checkboxSelected]} />
+                <Text style={styles.checkboxLabel}>Video</Text>
+              </TouchableOpacity>
+            </View>
 
             <Text style={styles.label}>Contraseña</Text>
             <TextInput style={styles.input} value={password} onChangeText={setPasswpord} placeholder="Introduce la contraseña" keyboardType="numeric" />
@@ -90,6 +91,26 @@ interface RegisterStudentprops {
   };
   
   const styles = StyleSheet.create({
+    checkboxContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 10,
+    },
+    checkbox: {
+      width: 20,
+      height: 20,
+      borderWidth: 1,
+      borderColor: '#004d40',
+      marginRight: 10,
+      borderRadius: 4,
+    },
+    checkboxSelected: {
+      backgroundColor: '#004d40',
+    },
+    checkboxLabel: {
+      fontSize: 16,
+      color: '#004d40',
+    },
     formContainer: {
       padding: 20,
       backgroundColor: '#f0f9ff',

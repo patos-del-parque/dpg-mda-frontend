@@ -12,18 +12,6 @@
       "resizeMode": "contain",
       "backgroundColor": "#ffffff"
     },
-    
-    "ios": {
-      "supportsTablet": true,
-      "bundleIdentifier": "com.anonymous.myapp"
-    },
-    "android": {
-      "adaptiveIcon": {
-        "foregroundImage": "./assets/images/adaptive-icon.png",
-        "backgroundColor": "#ffffff"
-      },
-      "package": "com.anonymous.myapp"
-    },
     "web": {
       "bundler": "metro",
       "output": "static",
@@ -37,10 +25,17 @@
           "supportsBackgroundPlayback": true,
           "supportsPictureInPicture": true
         }
-      ]
+      ],
+      "expo-font"
     ],
     "experiments": {
       "typedRoutes": true
+    },
+    "android": {
+      "package": "com.patosdelparque.appdgpmda"
+    },
+    "ios": {
+      "bundleIdentifier": "com.patosdelparque.appdgpmda"
     }
   }
 }

@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import { View, Text,  TextInput, StyleSheet, Pressable } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/StackNavigator';
-import { Picker } from '@react-native-picker/picker';
 
 
 interface ModifyStudentprops {
     ruta: String;
+    name: String;
   }
   
-  const ModifyStudent: React.FC<ModifyStudentprops> = ({ ruta }) => {
+  const ModifyStudent: React.FC<ModifyStudentprops> = ({ ruta, name }) => {
   
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   
@@ -20,7 +20,7 @@ interface ModifyStudentprops {
         const response = await fetch('http://localhost:27017/api/students/add-student', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nombre, apellidos, DNI, edad: parseInt(edad), curso, selectedNecesidad, password}),
+            body: JSON.stringify({ nombre, apellidos, curso, selectedNecesidad, password}),
         });
         const result = await response.json();
         alert(result.message || 'Estudiante modificado exitosamente');
@@ -31,8 +31,6 @@ interface ModifyStudentprops {
 
     const [nombre, setNombre] = useState('');
     const [apellidos, setApellidos] = useState('');
-    const [DNI, setDNI] = useState('');
-    const [edad, setEdad] = useState('');
     const [curso, setCurso] = useState('');
     const [selectedNecesidad, setSelectedNecesidad] = useState("");
     const [password, setPasswpord] = useState("");
@@ -44,37 +42,15 @@ interface ModifyStudentprops {
             <Text style={styles.title}>Modificar Datos Estudiante</Text>
 
             <Text style={styles.label}>Estudiante</Text>
-            <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={selectedEstudiante}
-                onValueChange={(itemValue) => setSelectedEstudiante(itemValue)}
-                style={styles.picker}
-              >
-                <Picker.Item label="Selecciona un estudiante" value={null} color="#004d40" />
-                {estudiantes.map(estudiante => (
-                  <Picker.Item
-                    //key={estudiante._id}
-                    //label={estudiante.nombre} coge de la bd 
-                    color="#004d40"
-                  />
-                ))}
-              </Picker>
-            </View>
     
-            <Text style={styles.label}>Nombre</Text>
+            <Text style={styles.label}>Nombre: {name}</Text>
             <TextInput style={styles.input} value={nombre} onChangeText={setNombre} placeholder="Introduce el nuevo nombre" />
     
             <Text style={styles.label}>Apellidos</Text>
             <TextInput style={styles.input} value={apellidos} onChangeText={setApellidos} placeholder="Introduce los nuevos apellidos" />
     
-            <Text style={styles.label}>DNI</Text>
-            <TextInput style={styles.input} value={DNI} onChangeText={setDNI} placeholder="Introduce el nuevo DNI" />
-    
             <Text style={styles.label}>Curso</Text>
             <TextInput style={styles.input} value={curso} onChangeText={setCurso} placeholder="Introduce el nuevo curso" />
-    
-            <Text style={styles.label}>Edad</Text>
-            <TextInput style={styles.input} value={edad} onChangeText={setEdad} placeholder="Introduce la nueva edad" keyboardType="numeric" />
 
           <Text style={styles.label}>Contraseña</Text>
           <TextInput style={styles.input} value={password} onChangeText={setPasswpord} placeholder="Introduce la nueva contraseña" keyboardType="numeric" />
