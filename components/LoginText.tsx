@@ -7,27 +7,29 @@ import { MaterialIcons, Ionicons } from '@expo/vector-icons';
 
 interface LoginTextprops {
   ruta: String;
+  url: String;
 }
 
-const LoginText: React.FC<LoginTextprops> = ({ ruta }) => {
+const LoginText: React.FC<LoginTextprops> = ({ ruta,url }) => {
 
-  const [email, setEmail] = useState('');
+  const [nombre, setNombre] = useState('');
   const [password, setPassword] = useState('');
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   
   
   const pressLoginButton = async () => {
-    navigation.navigate(ruta as keyof RootStackParamList);
+    //navigation.navigate(ruta as keyof RootStackParamList);
     try {
-      const response = await fetch('https://api.jsdu9873.tech/api/login', {
+      const response = await fetch(url, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password }),
+        body: JSON.stringify({ nombre: nombre, password: password }),
       });
 
       const data = await response.json();
+      console.log(data);
 
-      if (response.ok) {
+      if (response.ok && data.success) {
         // Login exitoso
         Alert.alert("Inicio de sesión correcto", "Bienvenido de nuevo");
         navigation.navigate(ruta as keyof RootStackParamList);
@@ -52,8 +54,8 @@ const LoginText: React.FC<LoginTextprops> = ({ ruta }) => {
             style={styles.input} 
             placeholder="Correo Electrónico" 
             keyboardType="email-address" 
-            value={email} 
-            onChangeText={setEmail}
+            value={nombre} 
+            onChangeText={setNombre}
           />
         </View>
 

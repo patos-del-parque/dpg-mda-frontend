@@ -7,7 +7,7 @@ import CreateTaskMenu from  '../components/CreateTaskMenu';
 const CreateTaskScreen: React.FC = () =>{
 return(
     <View style={styles.container}>
-        <CreateTaskMenu/>
+        <CreateTaskMenu ruta='Admin'/>
     </View>
   );
 };

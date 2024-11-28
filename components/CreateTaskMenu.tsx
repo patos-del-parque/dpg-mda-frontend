@@ -3,6 +3,9 @@ import { ScrollView, View, Text, Image,  TextInput,Alert, StyleSheet, Button, Fl
 import { launchImageLibrary } from 'react-native-image-picker'; 
 import { useVideoPlayer, VideoView } from 'expo-video';
 import * as DocumentPicker from 'expo-document-picker';
+import { RootStackParamList } from '../navigation/StackNavigator';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+
 
 type Step = {
     text: string;
@@ -11,75 +14,86 @@ type Step = {
     imageUri?: string;
 };
 
-    const CreateTaskMenu: React.FC = () => {
+interface RegisterStudentprops {
+  ruta: String;
+}
+
+    const CreateTaskMenu: React.FC<RegisterStudentprops> = ({ruta}) => {
         const [taskName, setTaskName] = useState('');
         const [taskSteps, setTaskSteps] = useState<Step[]>([]);
         const [currentStepText, setCurrentStepText] = useState('');
         const [taskDate, setTaskDate] = useState('');
         const [taskdescription, setTaskDescription] = useState('');
+        const [imageUriTask, setImageUriTask] = useState<string | undefined>(undefined);
         const [imageUri, setImageUri] = useState<string | undefined>(undefined);
         const [videoUri, setVideoUri] = useState<string | undefined>(undefined);
         const [isPlaying, setIsPlaying] = useState(false);
 
-
-        // Crear el nuevo paso con texto, imagen y video
-        const newStep: Step = {
-          description: taskdescription,
-          text: currentStepText,
-          imageUri: imageUri,
-          videoUri: videoUri,
-        };
-
         // Función para seleccionar una imagen
-    const selectImage = async () => {
-      const result = await launchImageLibrary({
-        mediaType: 'photo', 
-        includeBase64: false, 
-      });
-
-      console.log(result);
-
-        if (result.assets && result.assets.length > 0) {
-            setImageUri(result.assets[0].uri);
-        } else {
-            Alert.alert('Error', 'Por favor, selecciona una imagen.');
-        }
-    };
-
-    const selectVideo = async () => {
-      try {
-        const result = await DocumentPicker.getDocumentAsync({
-          type: 'video/*',
+      const selectImage = async () => {
+        const result = await launchImageLibrary({
+          mediaType: 'photo', 
+          includeBase64: false, 
         });
 
-        if (result.assets && result.assets.length > 0) {
-          const videoUri = result.assets[0].uri;
-          setVideoUri(videoUri); 
-        } else {
-          Alert.alert('Error', 'Por favor, selecciona un video.');
-        }
-      } catch (error) {
-        console.error(error);
-        Alert.alert('Error', 'Hubo un problema al seleccionar el video.');
-      }
-    };
+        console.log(result);
 
-    const player = videoUri
-    ? useVideoPlayer(videoUri, (player) => {
-          player.loop = true;
-      })
-    : null;
+          if (result.assets && result.assets.length > 0) {
+              setImageUri(result.assets[0].uri);
+          } else {
+              Alert.alert('Error', 'Por favor, selecciona una imagen.');
+          }
+      };
 
-    const togglePlayPause = () => {
-        if (player) {
-            if (isPlaying) {
-                player.pause();
-            } else {
-                player.play();
-            }
-            setIsPlaying(!isPlaying); // Alterna el estado de reproducción
+      const selectImageTak = async () => {
+        const result = await launchImageLibrary({
+          mediaType: 'photo', 
+          includeBase64: false, 
+        });
+
+        console.log(result);
+
+          if (result.assets && result.assets.length > 0) {
+              setImageUriTask(result.assets[0].uri);
+          } else {
+              Alert.alert('Error', 'Por favor, selecciona una imagen.');
+          }
+      };
+
+      /* const selectVideo = async () => {
+        try {
+          const result = await DocumentPicker.getDocumentAsync({
+            type: 'video/*',
+          });
+
+          if (result.assets && result.assets.length > 0) {
+            const videoUri = result.assets[0].uri;
+            setVideoUri(videoUri); 
+          } else {
+            Alert.alert('Error', 'Por favor, selecciona un video.');
+          }
+        } catch (error) {
+          console.error(error);
+          Alert.alert('Error', 'Hubo un problema al seleccionar el video.');
         }
-    };
+      }; */
+
+      const player = videoUri
+      ? useVideoPlayer(videoUri, (player) => {
+            player.loop = true;
+        })
+      : null;
+
+      /* const togglePlayPause = () => {
+          if (player) {
+              if (isPlaying) {
+                  player.pause();
+              } else {
+                  player.play();
+              }
+              setIsPlaying(!isPlaying); // Alterna el estado de reproducción
+          }
+      }; */
 
 
     // Función para añadir el paso actual a la lista de pasos
@@ -107,6 +121,11 @@ type Step = {
           videoUri: videoUri,
       };
 
+      setCurrentStepText('');
+      setTaskDescription('');
+      setImageUri(undefined);
+      setVideoUri(undefined);
+      
         // Añadir el paso a la lista
         setTaskSteps([...taskSteps, newStep]);
 
@@ -119,24 +138,55 @@ type Step = {
     setTaskSteps(taskSteps.filter((_, i) => i !== index)); 
   };
 
-  const addTask = () => {
-    if (!taskName.trim() || !taskDate.trim() || taskSteps.length === 0) {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+
+  const addTask = async () => {
+    navigation.navigate(ruta as keyof RootStackParamList);
+
+    if (!taskName.trim() || !taskDate.trim() ||taskSteps.length === 0) {
       Alert.alert('Error', 'Por favor, completa todos los campos antes de añadir la tarea');
       return;
     }
 
-    // Aquí puedes enviar la tarea a una base de datos o manejarla como prefieras
-    Alert.alert('Tarea Añadida', `Tarea "${taskName}" añadida con éxito`);
+    const taskData = {
+      nombre: taskName, // Nombre de la tarea
+      fechaCreacion: taskDate, // Fecha de la tarea
+      imagenTarea: imageUriTask,
+      pasos: taskSteps.map(step => ({
+          name: step.text,
+          description: step.description,
+          imageUri: step.imageUri,
+          videoUri: step.videoUri,
+      })),
+  };
 
-    // Limpia todos los campos después de añadir la tarea
-    setTaskName('');
-    setTaskSteps([]);
-    setCurrentStepText('');
-    setTaskDate('');
-    setTaskDescription('');
-    setImageUri(undefined);
-    setVideoUri(undefined);
-    
+    try {
+      const response = await fetch('https://api.jsdu9873.tech/api/tasks/add', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(taskData),
+      });
+      const result = await response.json();
+      if (response.ok) {
+        setTaskName('');
+        setTaskDate('');
+        setTaskSteps([]);
+        setCurrentStepText('');
+        setTaskDescription('');
+        setImageUri(undefined);
+        setVideoUri(undefined);
+        setImageUriTask(undefined);
+        Alert.alert('Éxito', result.message); 
+        alert(result.message || 'Tarea agregada con éxito');
+      } else {
+        Alert.alert('Error', result.message || 'Hubo un problema al agregar la tarea.');
+        alert(result.message || 'Hubo un problema al agregar la tarea.');
+      }
+    } catch (error) {
+      console.error(error);
+      Alert.alert('Error', 'No se pudo conectar con el servidor.');
+      alert('No se pudo conectar con el servidor.');
+    }
   };
 
   
@@ -179,12 +229,16 @@ type Step = {
             />
 
             <TouchableOpacity style={styles.button} onPress={selectImage}>
-                    <Text style={styles.buttonText}>Seleccionar Imagen</Text>
+                    <Text style={styles.buttonText}>Seleccionar Imagen de la tarea</Text>
             </TouchableOpacity>
 
-            {<TouchableOpacity style={styles.button} onPress={selectVideo}>
+            <TouchableOpacity style={styles.button} onPress={selectImageTak}>
+                    <Text style={styles.buttonText}>Seleccionar Imagen del paso</Text>
+            </TouchableOpacity>
+
+            {/* {<TouchableOpacity style={styles.button} onPress={selectVideo}>
                 <Text style={styles.buttonText}>Seleccionar Video</Text>
-            </TouchableOpacity>}
+            </TouchableOpacity>} */}
 
             <TouchableOpacity style={styles.button} onPress={addStep}>
                     <Text style={styles.buttonText}>Añadir Paso</Text>
@@ -201,7 +255,7 @@ type Step = {
                   {item.imageUri && (
                     <Image source={{ uri: item.imageUri }} style={styles.imagePreview} />
                   )}
-                  {item.videoUri && (
+                  {/* {item.videoUri && (
                     <View style={{ alignItems: 'center' }}>
                         <VideoView
                             style={styles.videoPreview}
@@ -214,7 +268,7 @@ type Step = {
                             onPress={togglePlayPause}
                         />
                     </View>
-                )}
+                )} */}
 
 
                   <TouchableOpacity

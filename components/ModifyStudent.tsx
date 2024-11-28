@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
-import { View, Text,  TextInput, StyleSheet, Pressable } from 'react-native';
+import { View, Text, TouchableOpacity, TextInput, StyleSheet, Pressable } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/StackNavigator';
+import { isAnimationTerminatingCalculation } from 'react-native-reanimated/lib/typescript/animation/springUtils';
 
 
 interface ModifyStudentprops {
@@ -13,56 +14,100 @@ interface ModifyStudentprops {
   
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   
-    const pressLoginButton = async () => {
+    const pressModifyButton = async () => {
       navigation.navigate(ruta as keyof RootStackParamList);
 
       try {
-        const response = await fetch('http://localhost:27017/api/students/add-student', {
-            method: 'POST',
+        const response = await fetch('http://localhost:27017/api/students/update', {
+            method: 'PUT',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nombre, apellidos, curso, selectedNecesidad, password}),
+            body: JSON.stringify({ currentName: name, nombre: nombre, aula: aula, password: password, lectura: lectura, imagen: imagen, video: video }),
         });
         const result = await response.json();
         alert(result.message || 'Estudiante modificado exitosamente');
-    } catch (error) {
-        alert('Error al modificar al estudiante');
-    }
+      } catch (error) {
+          //alert('Error al modificar al estudiante');
+      }
     };
 
     const [nombre, setNombre] = useState('');
-    const [apellidos, setApellidos] = useState('');
-    const [curso, setCurso] = useState('');
-    const [selectedNecesidad, setSelectedNecesidad] = useState("");
-    const [password, setPasswpord] = useState("");
-    const [estudiantes, setEstudiantes] = useState([]);
-    const [selectedEstudiante, setSelectedEstudiante] = useState(null);
+    const [aula, setAula] = useState('');
+    const [password, setPasswpord] = useState('');
+    const [lectura, setLectura] = useState(false);
+    const [imagen, setImagen] = useState(false);
+    const [video, setVideo] = useState(false);
 
     return(
-            <View style={styles.formContainer}>
-            <Text style={styles.title}>Modificar Datos Estudiante</Text>
+      <View style={styles.formContainer}>
+        <Text style={styles.title}>Modificar Datos Estudiante</Text>
 
-            <Text style={styles.label}>Estudiante</Text>
-    
-            <Text style={styles.label}>Nombre: {name}</Text>
-            <TextInput style={styles.input} value={nombre} onChangeText={setNombre} placeholder="Introduce el nuevo nombre" />
-    
-            <Text style={styles.label}>Apellidos</Text>
-            <TextInput style={styles.input} value={apellidos} onChangeText={setApellidos} placeholder="Introduce los nuevos apellidos" />
-    
-            <Text style={styles.label}>Curso</Text>
-            <TextInput style={styles.input} value={curso} onChangeText={setCurso} placeholder="Introduce el nuevo curso" />
+        <Text style={styles.label}>Estudiante</Text>
 
-          <Text style={styles.label}>Contraseña</Text>
-          <TextInput style={styles.input} value={password} onChangeText={setPasswpord} placeholder="Introduce la nueva contraseña" keyboardType="numeric" />
- 
-            <Pressable style={styles.button} onPress={pressLoginButton}>
-            <Text style={styles.buttonText}>Modificar</Text>
-            </Pressable>
+        <Text style={styles.label}>Nombre: {name}</Text>
+        <TextInput style={styles.input} value={nombre} onChangeText={setNombre} placeholder="Introduce el nuevo nombre" />
+
+        <Text style={styles.label}>Aula</Text>
+        <TextInput style={styles.input} value={aula} onChangeText={setAula} placeholder="Introduce el nuevo curso" />
+
+        <Text style={styles.label}>Tipo de vista</Text>
+        <View>
+          <TouchableOpacity
+            style={styles.checkboxContainer}
+            onPress={() => setLectura(!lectura)}
+          >
+            <View style={[styles.checkbox, lectura && styles.checkboxSelected]} />
+            <Text style={styles.checkboxLabel}>Lectura</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.checkboxContainer}
+            onPress={() => setImagen(!imagen)}
+          >
+            <View style={[styles.checkbox, imagen && styles.checkboxSelected]} />
+            <Text style={styles.checkboxLabel}>Imagen</Text>
+          </TouchableOpacity>
+
+          <TouchableOpacity
+            style={styles.checkboxContainer}
+            onPress={() => setVideo(!video)}
+          >
+            <View style={[styles.checkbox, video && styles.checkboxSelected]} />
+            <Text style={styles.checkboxLabel}>Video</Text>
+          </TouchableOpacity>
         </View>
+
+
+        <Text style={styles.label}>Contraseña</Text>
+        <TextInput style={styles.input} value={password} onChangeText={setPasswpord} placeholder="Introduce la nueva contraseña" keyboardType="numeric" />
+
+        <Pressable style={styles.button} onPress={pressModifyButton}>
+          <Text style={styles.buttonText}>Modificar</Text>
+        </Pressable>
+      </View>
     );
   };
   
   const styles = StyleSheet.create({
+    checkboxContainer: {
+      flexDirection: 'row',
+      alignItems: 'center',
+      marginBottom: 10,
+    },
+    checkbox: {
+      width: 20,
+      height: 20,
+      borderWidth: 1,
+      borderColor: '#004d40',
+      marginRight: 10,
+      borderRadius: 4,
+    },
+    checkboxSelected: {
+      backgroundColor: '#004d40',
+    },
+    checkboxLabel: {
+      fontSize: 16,
+      color: '#004d40',
+    },
     formContainer: {
       padding: 20,
       backgroundColor: '#f0f9ff',

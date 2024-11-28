@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text,  TextInput, StyleSheet, Pressable } from 'react-native';
+import { View, Text,  TextInput, StyleSheet, Alert, Pressable } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/StackNavigator';
 import { Picker } from '@react-native-picker/picker';
@@ -17,16 +17,22 @@ interface RegisterTeacherprops {
       navigation.navigate(ruta as keyof RootStackParamList);
 
       try {
-        const response = await fetch('http://localhost:27017/api/students/add-student', {
+        const response = await fetch('https://api.jsdu9873.tech/api/teachers/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ nombre, password }),
         });
         const result = await response.json();
-        alert(result.message || 'Profesor agregado exitosamente');
-    } catch (error) {
-        alert('Error al agregar el profesorf');
-    }
+        if (response.ok) {
+          Alert.alert('Éxito', result.message); 
+          alert(result.message || 'Profesor agregado exitosamente');
+        } else {
+          Alert.alert('Error', result.message || 'Hubo un problema al agregar al profesor.');
+          alert(result.message || 'Hubo un problema al agregar al profesor.');
+        }
+      } catch (error) {
+          alert('Error al agregar el profesor');
+      }
     };
 
     const [nombre, setNombre] = useState('');

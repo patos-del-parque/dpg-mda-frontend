@@ -25,7 +25,7 @@ interface RequestMaterialsprops {
         const result = await response.json();
         alert(result.message || 'Material solicitado exitosamente');
     } catch (error) {
-        alert('Error al solicitar el material');
+        //alert('Error al solicitar el material');
     }
     };
 

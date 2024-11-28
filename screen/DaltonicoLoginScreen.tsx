@@ -5,10 +5,10 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 import UserCard from '@/components/UserCard';
  
 
-type LoginStudentDefaultRouteProp = RouteProp<RootStackParamList, 'LoginStudentDefault'>;
+type DaltonicoLoginScreenRouteProp = RouteProp<RootStackParamList, 'DaltonicoLoginScreen'>;
 
-const LoginStudentDefault: React.FC = () => {
-    const route = useRoute<LoginStudentDefaultRouteProp>();
+const DaltonicoLoginScreen: React.FC = () => {
+    const route = useRoute<https://app.jsdu9873.tech/://app.jsdu9873.tech/https://app.jsdu9873.tech/Prop>();
     const { idPhoto } = route.params; // Recibe idPhoto como índice
 
 /*     const users = [
@@ -47,4 +47,4 @@ const styles = StyleSheet.create({
       },
   });
 
-export default LoginStudentDefault;
+export default DaltonicoLoginScreen;

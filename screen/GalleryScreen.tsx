@@ -1,17 +1,10 @@
-// screens/GalleryScreen.tsx
-import React, { useState } from 'react';
-import { View, ScrollView, StyleSheet, Text, Animated } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, ScrollView, StyleSheet, Text, Animated, Alert } from 'react-native';
 import UserCard from '../components/UserCard';
 
 const GalleryScreen: React.FC = () => {
-  const users = [
-    { name: 'Mario Medina Lopez', email: 'juan@example.com' },
-    { name: 'Carlos Fernandez Arrabal', email: 'ana@example.com' },
-    { name: 'Silvia Fernandez Arrabal', email: 'luis@example.com' },
-    { name: 'Alonso Doña Martinez', email: 'alonsodmx@gmail.com' },
-  ];
-
-  const [scaleValues] = useState(users.map(() => new Animated.Value(1)));
+  const [users, setUsers] = useState<{ name: string; aula: string; lectura: boolean,imagen: boolean,video: boolean; }[]>([]);
+  const [scaleValues, setScaleValues] = useState<Animated.Value[]>([]);
 
   const handleMouseEnter = (index: number) => {
     Animated.spring(scaleValues[index], {
@@ -27,6 +20,37 @@ const GalleryScreen: React.FC = () => {
     }).start();
   };
 
+  useEffect(() => {
+    // Función para obtener los datos de la API
+    const fetchUsers = async () => {
+      try {
+        const response = await fetch('https://api.jsdu9873.tech/api/students/get', {
+          method: 'GET',
+          headers: { 'Content-Type': 'application/json' },
+        });
+
+        const result = await response.json();
+        if (response.ok) {
+          const nombres = result.students.map((student: { nombre: string; aula: string,lectura: boolean,imagen: boolean,video:boolean }) => ({
+            name: student.nombre,
+            aula: student.aula,
+            lectura: student.lectura,
+            imagen: student.imagen,
+            video: student.video,
+          }));
+          setUsers(nombres); // Actualizamos el estado con los nombres obtenidos
+          setScaleValues(nombres.map(() => new Animated.Value(1))); // Creamos las animaciones para cada usuario
+        } else {
+          Alert.alert('Error', result.message || 'Hubo un problema al obtener los estudiantes.');
+        }
+      } catch (error) {
+        Alert.alert('Error', 'No se pudo obtener la lista de estudiantes.');
+      }
+    };
+
+    fetchUsers();
+  }, []); // Se ejecuta solo al montar el componente
+
   return (
     <View style={styles.container}>
       <View style={styles.gradient}>
@@ -39,7 +63,7 @@ const GalleryScreen: React.FC = () => {
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={() => handleMouseLeave(index)}
             >
-              <UserCard name={user.name} urlPhoto={user.email} estado={0} />
+              <UserCard name={user.name} urlPhoto={"https://reactnative.dev/docs/assets/p_cat2.png"} estado={0} lectura={user.lectura} imagen={user.imagen} video={user.video} />
             </Animated.View>
           ))}
         </ScrollView>
@@ -51,7 +75,7 @@ const GalleryScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#1E3A8A',
+    backgroundColor: '#11388e',
   },
   gradient: {
     flex: 1,
@@ -82,12 +106,12 @@ const styles = StyleSheet.create({
     borderRadius: 10,
     padding: 10,
     margin: 10,
-    width: '40%',
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 4 },
     shadowOpacity: 0.3,
     shadowRadius: 6,
     elevation: 5,
+    alignSelf: 'center', // Se adapta automáticamente al contenido.
   },
 });
 

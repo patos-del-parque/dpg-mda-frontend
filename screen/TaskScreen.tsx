@@ -8,7 +8,6 @@ return(
     <View style={styles.container}>
       <Text style={styles.title}>Panel de Administración de Tareas</Text>
         <TaskMenu route='TaskMenu' label='Crear Tareas' iconName='tasks' />
-        <TaskMenu route='AssignTaskScreen' label='Asignar Tareas' iconName='user-plus' />
         <TaskMenu route='TaskMenu' label='Ver Estado de Tareas' iconName='check-circle' />
     </View>
   );

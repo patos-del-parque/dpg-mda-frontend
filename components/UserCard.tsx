@@ -8,19 +8,28 @@ type UserCardProps = {
     name: string;
     urlPhoto: string;
     estado: number;
+    lectura: boolean;
+    imagen: boolean;
+    video: boolean;
 };
 
-const UserCard: React.FC<UserCardProps> = ({ name, urlPhoto ,estado}) => {
+const UserCard: React.FC<UserCardProps> = ({ name, urlPhoto ,estado, lectura,imagen,video}) => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const handlePress = () => {
-        navigation.navigate('LoginStudentDefault', { idPhoto: name }); // Asegúrate de que el nombre de la ruta es correcto
+        if (lectura) {
+            navigation.navigate('Home');
+        }else if (imagen){
+            navigation.navigate('LoginStudentDefault', { idPhoto: name });
+        }else if(video){
+            navigation.navigate('LoginStudentDefault', { idPhoto: name });
+        }
     };
 
     return (
         <TouchableOpacity onPress={handlePress} style={styles.touchable}>
             <Card containerStyle={styles.card}>
                 <Image
-                    source={{ uri: 'https://reactnative.dev/docs/assets/p_cat2.png' }} // Usa la URL de la imagen pasada como prop
+                    source={{ uri: 'https://cdn-icons-png.flaticon.com/512/3984/3984577.png' }} // Usa la URL de la imagen pasada como prop
                     style={styles.image}
                 />
                 <Text style={styles.title}>{name}</Text>

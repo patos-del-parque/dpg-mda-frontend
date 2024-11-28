@@ -1,161 +1,145 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput,  StyleSheet, Pressable, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, TextInput, StyleSheet, Pressable, FlatList, TouchableOpacity } from 'react-native';
 import { Picker } from '@react-native-picker/picker';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/StackNavigator';
 
 interface RegisterStudentprops {
   ruta: String;
+  name: String;
 }
 
-    const AssignTasks: React.FC<RegisterStudentprops> = ({ ruta }) => {
+const AssignTasks: React.FC<RegisterStudentprops> = ({ ruta, name }) => {
 
-      const [selectedEstudiante, setSelectedEstudiante] = useState<any>(null);
-      const [selectedTarea, setSelectedTarea] = useState<any>(null);
-      const [estudiantes, setEstudiantes] = useState<any[]>([]);
-      const [tareas, setTareas] = useState<any[]>([]);
-      const navigation = useNavigation<NavigationProp<RootStackParamList>>();
-      const [tamanoVista, setTamanoVista] = useState("entera");
-      const [lectura, setLectura] = useState(false);
-      const [imagen, setImagen] = useState(false);
-      const [video, setVideo] = useState(false);
+  const [selectedEstudiante, setSelectedEstudiante] = useState<any>(null);
+  const [selectedTarea, setSelectedTarea] = useState<any>(null);
+  const [estudiantes, setEstudiantes] = useState<any[]>([]);
+  const [tareas, setTareas] = useState<any[]>([]);
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
+  const [tamanoVista, setTamanoVista] = useState("entera");
+  const [lectura, setLectura] = useState(false);
+  const [imagen, setImagen] = useState(false);
+  const [video, setVideo] = useState(false);
 
-      const pressLoginButton = async () => {
-        if (!selectedEstudiante || !selectedTarea) {
-          alert("Selecciona un estudiante y una tarea.");
-          return;
-        }
-    
-        // Crear el objeto con los datos seleccionados
-        const datosAsignacion = {
-          estudianteId: selectedEstudiante._id, 
-          tareaId: selectedTarea._id, 
-          tamanoVista: tamanoVista, 
-          lectura: lectura,
-          imagen: imagen,
-          video: video,         
-        };
-    
-        try {
-          // Enviar datos al backend
-          const response = await fetch('https://api.jsdu9873.tech/api/students/asignarTarea', {
-            method: 'POST',
-            headers: {
-              'Content-Type': 'application/json',
-            },
-            body: JSON.stringify(datosAsignacion), 
-          });
-    
-          if (response.ok) {
-            alert("Tarea asignada correctamente.");
-            navigation.navigate(ruta as keyof RootStackParamList);
-          } else {
-            alert("Error al asignar la tarea.");
-          }
-        } catch (error) {
-          console.error(error);
-          alert("Hubo un problema al asignar la tarea.");
-        }
-      };
+  const pressLoginButton = async () => {
+    if (!selectedEstudiante || !selectedTarea) {
+      alert("Selecciona un estudiante y una tarea.");
+      return;
+    }
 
-      useEffect(() => {
-        fetch('https://api.jsdu9873.tech/api/students') 
-          .then(response => response.json())
-          .then(data => setEstudiantes(data))
-          .catch(error => console.error(error));
+    // Crear el objeto con los datos seleccionados
+    const datosAsignacion = {
+      estudianteId: selectedEstudiante._id,
+      tareaId: selectedTarea._id,
+      tamanoVista: tamanoVista,
+      lectura: lectura,
+      imagen: imagen,
+      video: video,
+    };
 
-          fetch('https://api.jsdu9873.tech/api/tasks') 
-          .then(response => response.json())
-          .then(data => setTareas(data))
-          .catch(error => console.error(error));
-      }, []);
-  
+    try {
+      // Enviar datos al backend
+      const response = await fetch('https://api.jsdu9873.tech/api/students/asignarTarea', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(datosAsignacion),
+      });
 
-      return(
-        <View style={styles.formContainer}>
-          <Text style={styles.title}>Asignar tarea a estudiante</Text>
+      if (response.ok) {
+        alert("Tarea asignada correctamente.");
+        navigation.navigate(ruta as keyof RootStackParamList);
+      } else {
+        alert("Error al asignar la tarea.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Hubo un problema al asignar la tarea.");
+    }
+  };
 
-          <Text style={styles.label}>Estudiante</Text>
-            <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={selectedEstudiante}
-                onValueChange={(itemValue) => setSelectedEstudiante(itemValue)}
-                style={styles.picker}
-              >
-                <Picker.Item label="Selecciona un estudiante" value={null} color="#004d40" />
-                {estudiantes.map((estudiante) => (
-                  <Picker.Item
-                    key={estudiante._id}
-                    label={estudiante.nombre}
-                    value={estudiante} // Pasamos el objeto completo del estudiante
-                    color="#004d40"
-                  />
-                ))}
-              </Picker>         
-            </View>  
+  useEffect(() => {
+    fetch('https://api.jsdu9873.tech/api/students/get-students')
+      .then(response => response.json())
+      .then(data => setEstudiantes(data))
+      .catch(error => console.error(error));
 
-          <Text style={styles.label}>Tarea</Text>
-            <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={selectedTarea}
-                onValueChange={(itemValue) => setSelectedTarea(itemValue)}
-                style={styles.picker}
-              >
-                <Picker.Item label="Selecciona una tarea" value={null} color="#004d40" />
-                {tareas.map((tarea) => (
-                  <Picker.Item
-                    key={tarea._id}
-                    label={tarea.nombre}
-                    value={tarea} // Pasamos el objeto completo de la tarea
-                    color="#004d40"
-                  />
-                ))}
-              </Picker>
-            </View>  
+    fetch('https://api.jsdu9873.tech/api/tasks')
+      .then(response => response.json())
+      .then(data => setTareas(data))
+      .catch(error => console.error(error));
+  }, []);
 
-          <Text style={styles.label}>Tipo de vista</Text>
-          <View>
-            <TouchableOpacity
-              style={styles.checkboxContainer}
-              onPress={() => setLectura(!lectura)}
-            >
-              <View style={[styles.checkbox, lectura && styles.checkboxSelected]} />
-              <Text style={styles.checkboxLabel}>Lectura</Text>
-            </TouchableOpacity>
 
-            <TouchableOpacity
-              style={styles.checkboxContainer}
-              onPress={() => setImagen(!imagen)}
-            >
-              <View style={[styles.checkbox, imagen && styles.checkboxSelected]} />
-              <Text style={styles.checkboxLabel}>Imagen</Text>
-            </TouchableOpacity>
+  return (
+    <View style={styles.formContainer}>
+      <Text style={styles.title}>Asignar tarea a estudiante</Text>
 
-            <TouchableOpacity
-              style={styles.checkboxContainer}
-              onPress={() => setVideo(!video)}
-            >
-              <View style={[styles.checkbox, video && styles.checkboxSelected]} />
-              <Text style={styles.checkboxLabel}>Video</Text>
-            </TouchableOpacity>
-          </View>
-            
+      <Text style={styles.label}>Estudiante: {name}</Text>
 
-            <Text style={styles.label}>Tamaño de vista</Text>
-            <Picker
-              selectedValue={tamanoVista}
-              onValueChange={(itemValue) => setTamanoVista(itemValue)}
-              style={styles.picker}
-            >
-              <Picker.Item label="Entera" value="entera" />
-              <Picker.Item label="Media" value="media" />
-              <Picker.Item label="Cuarto" value="cuarto" />
-            </Picker>
+      <Text style={styles.label}>Tarea</Text>
+      <View style={styles.pickerContainer}>
+        <Picker
+          selectedValue={selectedTarea}
+          onValueChange={(itemValue) => setSelectedTarea(itemValue)}
+          style={styles.picker}
+        >
+          <Picker.Item label="Selecciona una tarea" value={null} color="#004d40" />
+          {tareas.map((tarea) => (
+            <Picker.Item
+              key={tarea._id}
+              label={tarea.nombre}
+              value={tarea} // Pasamos el objeto completo de la tarea
+              color="#004d40"
+            />
+          ))}
+        </Picker>
+      </View>
 
-            <Pressable style={styles.button} onPress={pressLoginButton}>
-              <Text style={styles.buttonText}>Asignar tarea</Text>
-            </Pressable>
-        </View>
+      <Text style={styles.label}>Tipo de vista</Text>
+      <View>
+        <TouchableOpacity
+          style={styles.checkboxContainer}
+          onPress={() => setLectura(!lectura)}
+        >
+          <View style={[styles.checkbox, lectura && styles.checkboxSelected]} />
+          <Text style={styles.checkboxLabel}>Lectura</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.checkboxContainer}
+          onPress={() => setImagen(!imagen)}
+        >
+          <View style={[styles.checkbox, imagen && styles.checkboxSelected]} />
+          <Text style={styles.checkboxLabel}>Imagen</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          style={styles.checkboxContainer}
+          onPress={() => setVideo(!video)}
+        >
+          <View style={[styles.checkbox, video && styles.checkboxSelected]} />
+          <Text style={styles.checkboxLabel}>Video</Text>
+        </TouchableOpacity>
+      </View>
+
+
+      <Text style={styles.label}>Tamaño de vista</Text>
+      <Picker
+        selectedValue={tamanoVista}
+        onValueChange={(itemValue) => setTamanoVista(itemValue)}
+        style={styles.picker}
+      >
+        <Picker.Item label="Entera" value="entera" />
+        <Picker.Item label="Media" value="media" />
+        <Picker.Item label="Cuarto" value="cuarto" />
+      </Picker>
+
+      <Pressable style={styles.button} onPress={pressLoginButton}>
+        <Text style={styles.buttonText}>Asignar tarea</Text>
+      </Pressable>
+    </View>
   );
 };
 
@@ -228,15 +212,15 @@ const styles = StyleSheet.create({
     borderWidth: 1,
     borderRadius: 5,
     marginBottom: 15,
-    justifyContent: 'center',  
+    justifyContent: 'center',
   },
   picker: {
-      width: '100%',
-      height: 42,
-      borderRadius: 8,
-      backgroundColor: '#e0f7fa',
-      color: '#004d40',
-    },
+    width: '100%',
+    height: 42,
+    borderRadius: 8,
+    backgroundColor: '#e0f7fa',
+    color: '#004d40',
+  },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
@@ -265,7 +249,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: 'center',
     marginTop: 10,
-    width:'100%'
+    width: '100%'
   },
   buttonText: {
     color: '#fff',
@@ -315,11 +299,8 @@ const styles = StyleSheet.create({
     width: '100%',
     paddingVertical: 10,
     overflow: 'hidden',
-    
+
   },
 });
 
-
-
 export default AssignTasks;
- 

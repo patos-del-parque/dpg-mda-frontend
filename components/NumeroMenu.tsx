@@ -4,7 +4,6 @@ import { RouteProp, useRoute } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/StackNavigator';
 import { FontAwesome } from '@expo/vector-icons';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-
 type NumeroMenuScreenRouteProp = RouteProp<RootStackParamList, 'NumeroMenuScreen'>;
 
 const NumeroMenu: React.FC = () => {
@@ -13,9 +12,9 @@ const NumeroMenu: React.FC = () => {
     const { nombreAula, imageAula } = route.params; // Obtiene el nombre del aula pasado como parámetro
     
     const menus = [
-        { id: 1, title: 'MENU 1', description: 'Pipas', image: 'https://reactnative.dev/docs/assets/p_cat2.png' },
-        { id: 2, title: 'MENU 2',  description: 'Triturado', image: 'https://reactnative.dev/docs/assets/p_cat2.png' },
-        { id: 3, title: 'MENU 3',  description: 'Vegetariano', image: 'https://reactnative.dev/docs/assets/p_cat2.png' },
+        { id: 1, title: 'MENU 1', description: 'Carne', image: '../images/foods/plato_carne.jpg' },
+        { id: 2, title: 'MENU 2',  description: 'Triturado', image: 'https://farm8.staticflickr.com/7033/6796616701_453b354444_b.jpg' },
+        { id: 3, title: 'MENU 3',  description: 'Vegetariano', image: 'https://www.fithappysisters.com/Portals/FitHappySister/Mercadillo/files/Receta-Vegetariana_-Budha-bowl-Horizontal.jpg' },
     ];
 
 
@@ -68,7 +67,7 @@ const NumeroMenu: React.FC = () => {
                     <View key={menus[menuIndex].id} style={styles.card}>
                         <Text style={styles.cardTitle}>{menus[menuIndex].title}</Text>
                         <Text style={styles.cardTitle}>{menus[menuIndex].description}</Text>
-                        <Image source={{ uri: menus[0].image }} style={styles.image} />
+                        <Image source={{ uri: menus[menuIndex].image }} style={styles.image} />
                         <View style={styles.counterContainer}>
                             <TouchableOpacity onPress={() => decreaseQuantity(0)} style={styles.button}>
                                 <Text style={styles.buttonText}>-</Text>
@@ -111,13 +110,13 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     title: {
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: 'bold',
         color: '#00796b',
         marginBottom: 20,
     },
     description: {
-        fontSize: 24,
+        fontSize: 28,
         fontWeight: 'bold',
         color: '#00796b',
         marginBottom: 20,
@@ -129,7 +128,7 @@ const styles = StyleSheet.create({
         width: '100%', // Asegura que el co
     },
     card: {
-        width: '30%',
+        width: '50%',
         backgroundColor: '#e0f7fa',
         borderRadius: 10,
         alignItems: 'center',
@@ -142,16 +141,16 @@ const styles = StyleSheet.create({
         elevation: 3,
     },
     cardTitle: {
-        fontSize: 18,
+        fontSize: 28,
         fontWeight: 'bold',
         color: '#00796b',
         marginBottom: 10,
         textAlign: 'center',
     },
     image: {
-        width: 60,
-        height: 60,
-        marginBottom: 10,
+        width: 120,
+        height: 120,
+        marginBottom: 15,
     },
     counterContainer: {
         flexDirection: 'row',
@@ -177,9 +176,9 @@ const styles = StyleSheet.create({
         color: '#00796b',
     },
     dynamicImage: {
-        width: 70,
-        height: 70,
-        marginTop: 10,
+        width: 100, // Imagen dinámica más grande
+        height: 100,
+        marginTop: 15,
     },
     buttonsContainer: {
         flexDirection: 'column',

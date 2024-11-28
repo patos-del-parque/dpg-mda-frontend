@@ -58,6 +58,7 @@ export type RootStackParamList = {
   TeacherAdminScreen: undefined;
   SpecificTaskScreen: undefined;
   AssignMaterialsRequestsScreen: {name: string};
+  DaltonicoLoginScreen: { idPhoto: String};
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -91,7 +92,8 @@ const StackNavigator: React.FC = () => {
       <Stack.Screen name="StudentsScreen" component= {StudentsScreen}/>    
       <Stack.Screen name="TeacherAdminScreen" component= {TeacherAdminScreen}/>
       <Stack.Screen name="AssignMaterialsRequestsScreen" component= {AssignMaterialsRequestsScreen}/>
-      <Stack.Screen name="SpecificTaskScreen" component= {SpecificTaskScreen}/>    
+      <Stack.Screen name="SpecificTaskScreen" component= {SpecificTaskScreen}/>
+      <Stack.Screen name="DaltonicoLoginScreen" component= {LoginStudentDefault}/>    
     </Stack.Navigator>
   );
 };

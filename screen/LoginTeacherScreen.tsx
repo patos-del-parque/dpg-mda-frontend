@@ -7,7 +7,7 @@ const LoginTeacherScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      < LoginText ruta='Teacher' />
+      < LoginText ruta='Teacher' url='https://api.jsdu9873.tech/api/teachers/login'/>
     </View>
   );
 };

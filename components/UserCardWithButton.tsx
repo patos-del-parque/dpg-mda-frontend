@@ -4,12 +4,11 @@ import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/StackNavigator';
 
 type UserCardWithButtonProps = {
-    keyProp: number;
     name: string;
     urlPhoto: string;
 };
 
-const UserCardWithButton: React.FC<UserCardWithButtonProps> = ({ name, urlPhoto, keyProp}) => {
+const UserCardWithButton: React.FC<UserCardWithButtonProps> = ({ name, urlPhoto}) => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>()
 
     return (
@@ -46,6 +45,12 @@ const UserCardWithButton: React.FC<UserCardWithButtonProps> = ({ name, urlPhoto,
                 onPress={() => navigation.navigate('EraseStudent', {name})}
               >
                 <Text style={styles.buttonText}>Borrar Estudiante</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.button}
+                onPress={() => navigation.navigate('AssignTaskScreen', {name})}
+              >
+                <Text style={styles.buttonText}>Asignar Tarea</Text>
               </TouchableOpacity>
             </View>
         </View>

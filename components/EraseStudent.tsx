@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text,  TextInput, StyleSheet, Pressable } from 'react-native';
+import { View, Text,  TextInput, StyleSheet, Pressable, Alert } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/StackNavigator';
 
@@ -13,23 +13,28 @@ const EraseStudent: React.FC<EraseStudentprops> = ({ ruta, name }) => {
 
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  const pressLoginButton = async () => {
+  const pressButton = async () => {
     navigation.navigate(ruta as keyof RootStackParamList);
+    //const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
     try {
-      const response = await fetch('http://localhost:27017/api/students/add-student', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({Nombre}),
+      const response = await fetch('https://api.jsdu9873.tech/api/students/delete', {
+          method: 'DELETE',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({nombre: name}),
       });
       const result = await response.json();
-      alert(result.message || 'Estudiante borrado exitosamente');
-      } catch (error) {
-        alert('Error al borrar al estudiante');
+      if (response.ok) {
+        Alert.alert('Éxito', result.message); 
+        alert(result.message || 'Profesor dado de baja exitosamente');
+      } else {
+        Alert.alert('Error', result.message || 'Hubo un problema al dar de baja al profesor.');
+        alert(result.message || 'Hubo un problema al dar de baja al profesor.');
       }
-    };
-
-    const [Nombre, setNombre] = useState('');
+  } catch (error) {
+      alert('Error al dar de baja al profesor');
+  }
+  };
 
     return(
         <View style={styles.formContainer}>
@@ -37,7 +42,7 @@ const EraseStudent: React.FC<EraseStudentprops> = ({ ruta, name }) => {
     
             <Text style={styles.label}>Estudiante: {name}</Text>
     
-            <Pressable style={styles.button} onPress={pressLoginButton}>
+            <Pressable style={styles.button} onPress={pressButton}>
             <Text style={styles.buttonText}>Dar de baja</Text>
             </Pressable>
         </View>

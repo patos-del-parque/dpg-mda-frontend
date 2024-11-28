@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { View, Text,  TextInput, StyleSheet, Pressable } from 'react-native';
+import { View, Text,  TextInput, StyleSheet, Pressable, Alert } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/StackNavigator';
 import { Picker } from '@react-native-picker/picker';
@@ -14,7 +14,7 @@ interface ModifyTeacherprops {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   
     const pressLoginButton = async () => {
-      navigation.navigate(ruta as keyof RootStackParamList);
+      /*navigation.navigate(ruta as keyof RootStackParamList);
 
       try {
         const response = await fetch('http://localhost:27017/api/students/add-student', {
@@ -26,38 +26,45 @@ interface ModifyTeacherprops {
         alert(result.message || 'Profesor modificado exitosamente');
     } catch (error) {
         alert('Error al modificar el profesorf');
-    }
+    }*/
+      navigation.navigate(ruta as keyof RootStackParamList);
+
+      try {
+        const response = await fetch('https://api.jsdu9873.tech/api/teachers/update', {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ currentName: nombre_actual, newName: nuevo_nombre, newPassword: password }),
+        });
+        const result = await response.json();
+        if (response.ok) {
+          Alert.alert('Éxito', result.message); 
+          alert(result.message || 'Profesor modificado exitosamente');
+        } else {
+          Alert.alert('Error', result.message || 'Hubo un problema al modificar los datos del profesor.');
+          alert(result.message || 'Hubo un problema al modificar los datos del profesor.');
+        }
+      } catch (error) {
+          alert('Error al modificar los datos del profesor');
+      }
     };
 
-    const [nombre, setNombre] = useState('');
+    const [nombre_actual, setNombreActual] = useState('');
+    const [nuevo_nombre, setNuevoNombre] = useState('');
     const [password, setPasswpord] = useState("");
-    const [profesores, setProfesores] = useState([]);
-    const [selectedProfesor, setSelectedProfesor] = useState(null);
+    //const [profesores, setProfesores] = useState([]);
+    //const [selectedProfesor, setSelectedProfesor] = useState(null);
 
     return(
         <View style={styles.formContainer}>
             <Text style={styles.title}>Modificar datos Profesor</Text>
 
             <Text style={styles.label}>Profesor</Text>
-            <View style={styles.pickerContainer}>
-              <Picker
-                selectedValue={selectedProfesor}
-                onValueChange={(itemValue) => setSelectedProfesor(itemValue)}
-                style={styles.picker}
-              >
-                <Picker.Item label="Selecciona un profesor" value={null} color="#004d40" />
-                {profesores.map(profesor => (
-                  <Picker.Item
-                    //key={estudiante._id}
-                    //label={estudiante.nombre} coge de la bd 
-                    color="#004d40"
-                  />
-                ))}
-              </Picker>
-            </View>
+
+            <Text style={styles.label}>Nombre Actual</Text>
+            <TextInput style={styles.input} value={nombre_actual} onChangeText={setNombreActual} placeholder="Introduce el nombre actual" />
     
             <Text style={styles.label}>Nombre</Text>
-            <TextInput style={styles.input} value={nombre} onChangeText={setNombre} placeholder="Introduce el nuevo nombre" />
+            <TextInput style={styles.input} value={nuevo_nombre} onChangeText={setNuevoNombre} placeholder="Introduce el nuevo nombre" />
     
             <Text style={styles.label}>Contraseña</Text>
             <TextInput style={styles.input} value={password} onChangeText={setPasswpord} placeholder="Introduce la nueva contraseña" keyboardType="numeric" />

@@ -4,10 +4,9 @@ import LoginText from  '../components/LoginText';
 
 const LoginAdminScreen: React.FC = () => {
 
-
   return (
     <View style={styles.container}>
-      < LoginText ruta='Admin' />
+      < LoginText ruta='Admin' url='https://api.jsdu9873.tech/api/admin/login'/>
     </View>
   );
 };

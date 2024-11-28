@@ -4,10 +4,11 @@ import AssignTask from  '../components/AssignTask';
 
 
 
-const AssignTaskScreen: React.FC = () =>{
-return(
+const AssignTaskScreen: React.FC = ({ route }) =>{
+  const { name } = route.params;
+  return(
     <View style={styles.container}>
-        <AssignTask ruta='Admin'/>
+        <AssignTask ruta='Admin' name={name}/>
     </View>
   );
 };

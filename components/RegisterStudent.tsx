@@ -13,29 +13,32 @@ interface RegisterStudentprops {
   
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   
-    const pressLoginButton = async () => {
+    const pressButton = async () => {
       navigation.navigate(ruta as keyof RootStackParamList);
 
       try {
-        const response = await fetch('https://api.jsdu9873.tech/api/students/add-student', {
+        const response = await fetch('https://api.jsdu9873.tech/api/students/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nombre,curso, password }),
+            body: JSON.stringify({ nombre, aula, password, lectura, imagen, video }),
         });
         const result = await response.json();
         if (response.ok) {
           Alert.alert('Éxito', result.message); 
+          alert(result.message || 'Alumno agregado exitosamente');
         } else {
           Alert.alert('Error', result.message || 'Hubo un problema al agregar el estudiante.');
+          alert(result.message || 'Hubo un problema al agregar el estudiante.');
         }
       } catch (error) {
         console.error(error);
         Alert.alert('Error', 'No se pudo conectar con el servidor.');
+        alert('No se pudo conectar con el servidor.');
       }
     };
 
     const [nombre, setNombre] = useState('');
-    const [curso, setCurso] = useState('');
+    const [aula, setCurso] = useState('');
     const [password, setPasswpord] = useState("");
     const [lectura, setLectura] = useState(false);
     const [imagen, setImagen] = useState(false);
@@ -51,7 +54,7 @@ interface RegisterStudentprops {
     
              
             <Text style={styles.label}>Aula</Text>
-            <TextInput style={styles.input} value={curso} onChangeText={setCurso} placeholder="Introduce el aula" />
+            <TextInput style={styles.input} value={aula} onChangeText={setCurso} placeholder="Introduce el aula" />
 
             <Text style={styles.label}>Tipo de vista</Text>
             <View>
@@ -83,7 +86,7 @@ interface RegisterStudentprops {
             <Text style={styles.label}>Contraseña</Text>
             <TextInput style={styles.input} value={password} onChangeText={setPasswpord} placeholder="Introduce la contraseña" keyboardType="numeric" />
   
-            <Pressable style={styles.button} onPress={pressLoginButton}>
+            <Pressable style={styles.button} onPress={pressButton}>
             <Text style={styles.buttonText}>Registrar</Text>
             </Pressable>
         </View>

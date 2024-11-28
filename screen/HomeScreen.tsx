@@ -1,9 +1,17 @@
-// src/components/HomeScreen.tsx
+//Alonso
+
+//Utilizar UserCard componente ya que es el formato de foto texto flecha
+//Seria interesante añadirle sombra a las Card o algo
+//URGENTE CAMBIAR EL NOMBRE DE COMPONENTE USERCARD NO VALE
+//UserCard hay que darle una vuelta no puede ser tan especifico hay que hacerlo
+//mas general
+
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity, Image,ImageBackground } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/StackNavigator';
 import { Ionicons } from 'react-native-vector-icons';
+import { Icon } from 'react-native-elements';
 
 const HomeScreen: React.FC = () => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -13,7 +21,7 @@ const HomeScreen: React.FC = () => {
   };
 
   const handleRightPanelPress = () => {
-    navigation.navigate('Galeria'); 
+    navigation.navigate('Galeria');
   };
 
   const handleThirdButtonPress = () => {
@@ -22,33 +30,57 @@ const HomeScreen: React.FC = () => {
 
   return (
     <View style={styles.container}>
-      <Text style={styles.title}>¿Quién eres?</Text>
-
+      <Image
+        source={{ uri: 'https://www.sjdgranada.es/sites/default/files/imce/GRANADA/Logotipo%20SJD-modified2.png' }}
+        style={styles.headerImage}
+      />
+      <Text style={styles.title}>Selecciona tu Sesión</Text>
+      <Icon name="arrow-down" type="feather" color="#77a345" size={54} />
       <View style={styles.panelsContainer}>
-        <TouchableOpacity onPress={handleRightPanelPress} style={styles.panel}>
-          <Ionicons name="people-outline" size={70} color="#fff" />
-          <Text style={styles.panelText}>ESTUDIANTES</Text>
+        <TouchableOpacity 
+            onPress={handleRightPanelPress} 
+            style={styles.panel}
+        >
+            <Ionicons 
+              name="people-outline" 
+              size={70} 
+              color="#fff" 
+            />
+            <Text style={styles.panelText}>
+              ESTUDIANTES
+            </Text>
+            <Icon
+              name="arrow-right-circle"
+              type="feather"
+              color="#000000"
+              size={34}
+              onPress={handleRightPanelPress} 
+            />
         </TouchableOpacity>
-
         <TouchableOpacity onPress={handleThirdButtonPress} style={styles.panel}>
           <Ionicons name="school-outline" size={70} color="#fff" />
           <Text style={styles.panelText}>PROFESOR</Text>
+          <Icon
+            name="arrow-right-circle"
+            type="feather"
+            color="#000000"
+            size={34}
+            onPress={handleThirdButtonPress}
+          />
         </TouchableOpacity>
-
         <TouchableOpacity onPress={handleLeftPanelPress} style={styles.panel}>
           <Ionicons name="person-circle-outline" size={70} color="#fff" />
-          <Text style={styles.panelText}>ADMIN</Text>
+          <Text style={styles.panelText}>ADMINISTRADOR</Text>
+          <Icon
+            name="arrow-right-circle"
+            type="feather"
+            color="#000000"
+            size={34}
+            onPress={handleLeftPanelPress}
+          />
         </TouchableOpacity>
       </View>
-
-      <View style={styles.floatingButtonsContainer}>
-        <TouchableOpacity onPress={handleLeftPanelPress} style={styles.floatingButton}>
-          <Text style={styles.floatingButtonText}>Admin</Text>
-        </TouchableOpacity>
-        <TouchableOpacity onPress={handleThirdButtonPress} style={styles.floatingButtonLeft}>
-          <Text style={styles.floatingButtonText}>Profesor</Text>
-        </TouchableOpacity>
-      </View>
+      {/* Nueva imagen en la parte inferior */}
     </View>
   );
 };
@@ -56,13 +88,17 @@ const HomeScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20,
-    backgroundColor: '#E4E7E8',
-    justifyContent: 'center',
+    backgroundColor: '#FFFFFF',
     alignItems: 'center',
   },
+  headerImage: {
+    width: '20%',
+    height: 100, // Ajusta la altura según tus necesidades
+    resizeMode: 'contain',
+    marginBottom: 20, // Espaciado debajo de la imagen
+  },
   title: {
-    fontSize: 30,
+    fontSize: 50,
     fontWeight: 'bold',
     color: '#4A90E2',
     marginBottom: 30,
@@ -130,6 +166,10 @@ const styles = StyleSheet.create({
   floatingButtonText: {
     color: '#fff',
     fontWeight: 'bold',
+  },
+  image: {
+    flex: 1,
+    justifyContent: 'center',
   },
 });
 
