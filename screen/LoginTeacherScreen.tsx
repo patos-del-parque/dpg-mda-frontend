@@ -2,6 +2,7 @@ import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import LoginText from  '../components/LoginText';
 
+
 const LoginTeacherScreen: React.FC = () => {
 
 
@@ -9,6 +10,7 @@ const LoginTeacherScreen: React.FC = () => {
     <View style={styles.container}>
       < LoginText ruta='Teacher' url='https://api.jsdu9873.tech/api/teachers/login'/>
     </View>
+    
   );
 };
 

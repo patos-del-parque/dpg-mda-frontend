@@ -7,8 +7,7 @@ const TeacherAdminScreen: React.FC = () =>{
     <View style={styles.container}>
       <Text style={styles.title}>Panel del Profesorado</Text>
       <TeacherAdminMenu route='RegisterTeacher' label='Dar de alta a profesor' iconName='user' />
-      <TeacherAdminMenu route='ModifyTeacher' label='Modificar datos profesor' iconName='edit' />
-      <TeacherAdminMenu route='EraseTeacher' label='Dar de baja a profesor' iconName='user' />
+      <TeacherAdminMenu route='ListTeacher' label='Lista de profesores' iconName='user' />
     </View>
   );
 };

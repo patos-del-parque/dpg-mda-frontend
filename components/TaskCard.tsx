@@ -32,6 +32,7 @@ interface TaskCardProps {
   };
 }
 
+
 const TaskCard: React.FC = ({prueba}) => {
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 

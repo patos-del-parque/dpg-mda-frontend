@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { View, Text,  TextInput, StyleSheet, Pressable } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text,  TextInput, StyleSheet, Alert, Pressable } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/StackNavigator';
 import { Picker } from '@react-native-picker/picker';
@@ -10,44 +10,135 @@ interface RequestMaterialsprops {
   }
   
   const RequestMaterial: React.FC<RequestMaterialsprops> = ({ ruta }) => {
+
+    const [selectedMaterial, setSelectedMaterial] = useState<string>("");
+    const [materiales, setMateriales] = useState<any[]>([]);
+    const [selectedCantidad, setSelectedCantidad] = useState<string>("1");
+    const [Clase, setClase] = useState('');
   
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   
-    const pressLoginButton = async () => {
-      navigation.navigate(ruta as keyof RootStackParamList);
+    const pressRequestButton = async () => {
+
+      if (!selectedMaterial) {
+        Alert.alert("Error Selecciona un material.");
+        return;
+      }
+
+      if (!selectedCantidad) {
+        Alert.alert("Error", "Selecciona cantidad de material a pedir.");
+        return;
+      }
+
+      const parsedCantidad = parseInt(selectedCantidad, 10);
 
       try {
-        const response = await fetch('http://localhost:27017/api/materials', {
+        const response = await fetch('https://api.jsdu9873.tech/api/materials-request/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({Material}),
+            body: JSON.stringify({clase: Clase, nombre: selectedMaterial, cantidad: parsedCantidad})
         });
         const result = await response.json();
-        alert(result.message || 'Material solicitado exitosamente');
+        if (response.ok) {
+          console.log('Éxito', result.message); 
+          console.log(result.message || 'Solicitud de material agregada exitosamente');
+          navigation.navigate(ruta as keyof RootStackParamList);
+        } else {
+          console.log('Error', result.message || 'Hubo un problema al agregar la solicitud de material.');
+          console.log(result.message ||  'Hubo un problema al agregar la solicitud de material.');
+        }
     } catch (error) {
-        //alert('Error al solicitar el material');
+      console.error(error);
+      console.log('Error', 'No se pudo conectar con el servidor.');
+      console.log('No se pudo conectar con el servidor.');
     }
     };
 
-    const [Material, setMaterial] = useState('');
-    const [Cantidad, setCantidad] = useState('');
-    const [Clase, setClase] = useState('');
+    const fetchMateriales = async () => {
+      try {
+        const response = await fetch("https://api.jsdu9873.tech/api/materials/get", {
+          method: "GET",
+          headers: { "Content-Type": "application/json" },
+        });
+  
+        const result = await response.json();
+        if (response.ok) {
+          const materialesProcesados = result.materials.map(
+            (material: { _id: string; nombre: string; cantidad: Number; imagen: string}) => ({
+              id: material._id,
+              nombre: material.nombre,
+              cantidad: material.cantidad,
+              imagen: material.imagen
+            })
+          );
+          setMateriales(materialesProcesados);
+        } else {
+          console.log(
+            "Error",
+            result.message || "Hubo un problema al obtener los materiales."
+          );
+        }
+      } catch (error) {
+        console.log("Error", "No se pudo obtener la lista de materiales.");
+      }
+    };
 
+    useEffect(() => {
+      fetchMateriales();
+    }, []);
+
+  // Obtener la cantidad máxima del material seleccionado
+  const material = materiales.find((material) => material.nombre === selectedMaterial);
+  const maxCantidad = material?.cantidad || 1;
 
     return(
         <View style={styles.formContainer}>
             <Text style={styles.title}>Solicitar Material</Text>
 
             <Text style={styles.label}>Clase a donde llevar el material</Text>
-            <TextInput style={styles.input} value={Clase} onChangeText={setClase} placeholder="Introduce la clase a donde llevar el material" />
+            <TextInput style={styles.input} value={Clase} onChangeText={setClase} placeholder="Introduce el número de la clase" />
     
-            <Text style={styles.label}>Nombre del material</Text>
-            <TextInput style={styles.input} value={Material} onChangeText={setMaterial} placeholder="Introduce el nombre del material" />
+            <Text style={styles.label}>Material</Text>
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={selectedMaterial}
+                onValueChange={(itemValue) => setSelectedMaterial(itemValue)
+                }
+                style={styles.picker}
+              >
+                {materiales.map((material) => (
+                  <Picker.Item
+                    key={material.id}
+                    label={material.nombre}
+                    value={material.nombre}
+                    color="#004d40"
+                  />
+                ))}
+              </Picker>
+            </View>
 
             <Text style={styles.label}>Cantidad</Text>
-            <TextInput style={styles.input} value={Cantidad} onChangeText={setCantidad} placeholder="Introduce la cantidad" />
-
-            <Pressable style={styles.button} onPress={pressLoginButton}>
+            <View style={styles.pickerContainer}>
+              <Picker
+                selectedValue={selectedCantidad}
+                onValueChange={(itemValue) => setSelectedCantidad(itemValue)}
+                style={styles.picker}
+                //enabled={!!selectedMaterial} // Desactivar si no hay material seleccionado
+              >
+                {Array.from({ length: maxCantidad }, (_, index) => index + 1).map(
+                            (cantidad) => (
+                              <Picker.Item
+                                key={cantidad}
+                                label={cantidad.toString()}
+                                value={cantidad}
+                                color="#004d40"
+                              />
+                            )
+                )}
+              </Picker>
+            </View>
+            
+            <Pressable style={styles.button} onPress={pressRequestButton}>
             <Text style={styles.buttonText}>Solicitar material</Text>
             </Pressable>
         </View>

@@ -22,7 +22,7 @@ const AssingMaterialsRequestsScreen = ({ route }) => {
 
   const assignToStudent = (requestId: number) => {
     if (!selectedStudent) {
-      Alert.alert("Error", "Debes seleccionar un estudiante antes de asignar.");
+      console.log("Error", "Debes seleccionar un estudiante antes de asignar.");
       return;
     }
 
@@ -33,7 +33,7 @@ const AssingMaterialsRequestsScreen = ({ route }) => {
       )
     );
 */
-    Alert.alert("Asignación exitosa", `La solicitud fue asignada a ${selectedStudent}`);
+console.log("Asignación exitosa", `La solicitud fue asignada a ${selectedStudent}`);
   };
 
   return (

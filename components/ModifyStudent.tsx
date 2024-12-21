@@ -15,18 +15,43 @@ interface ModifyStudentprops {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   
     const pressModifyButton = async () => {
+      
       navigation.navigate(ruta as keyof RootStackParamList);
 
+      const updatedFields: Record<string, any> = {};
+
+      if (nombre) updatedFields.nombre = nombre;
+      if (aula) updatedFields.aula = aula;
+      if (password) updatedFields.password = password;
+      if (avatar) updatedFields.avatar = avatar;
+      //if (lectura) updatedFields.lectura = lectura; 
+      updatedFields.lectura = lectura; 
+      //if (imagen) updatedFields.imagen = imagen;
+      updatedFields.imagen = imagen;
+      //if (video) updatedFields.video = video;
+      updatedFields.video = video;
+
       try {
-        const response = await fetch('http://localhost:27017/api/students/update', {
-            method: 'PUT',
+        const response = await fetch('https://api.jsdu9873.tech/api/students/update', {
+            method: 'PATCH',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ currentName: name, nombre: nombre, aula: aula, password: password, lectura: lectura, imagen: imagen, video: video }),
+            body: JSON.stringify({ currentName: name, ...updatedFields, }),
         });
         const result = await response.json();
-        alert(result.message || 'Estudiante modificado exitosamente');
-      } catch (error) {
-          //alert('Error al modificar al estudiante');
+        if (response.ok) {
+          setNombre('');
+          setAula('');
+          setPasswpord('');
+          setAvatar('');
+          setLectura(false);
+          setImagen(false);
+          setVideo(false);
+          //setComedor(false);
+			}
+      console.log('Estudiante modificado exitosamente');
+      } 
+      catch (error) {
+        console.log('Error al modificar al estudiante');
       }
     };
 
@@ -36,6 +61,7 @@ interface ModifyStudentprops {
     const [lectura, setLectura] = useState(false);
     const [imagen, setImagen] = useState(false);
     const [video, setVideo] = useState(false);
+    const[avatar, setAvatar] = useState('');
 
     return(
       <View style={styles.formContainer}>
@@ -74,8 +100,11 @@ interface ModifyStudentprops {
             <View style={[styles.checkbox, video && styles.checkboxSelected]} />
             <Text style={styles.checkboxLabel}>Video</Text>
           </TouchableOpacity>
+
         </View>
 
+        <Text style={styles.label}>Avatar: {name}</Text>
+        <TextInput style={styles.input} value={avatar} onChangeText={setAvatar} placeholder="Introduce el nuevo url de avatar" />
 
         <Text style={styles.label}>Contraseña</Text>
         <TextInput style={styles.input} value={password} onChangeText={setPasswpord} placeholder="Introduce la nueva contraseña" keyboardType="numeric" />

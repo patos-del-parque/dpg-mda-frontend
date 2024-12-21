@@ -1,25 +1,27 @@
 import React, { useState } from 'react';
-import { View, Text, Image,  TextInput, StyleSheet, Button, FlatList, TouchableOpacity } from 'react-native';
+import { View, Text, Image,  TextInput,Alert, StyleSheet, Button, FlatList, TouchableOpacity } from 'react-native';
 import { launchImageLibrary } from 'react-native-image-picker'; 
 import { useVideoPlayer, VideoView } from 'expo-video';
 import { RootStackParamList } from '../navigation/StackNavigator';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
-import { Input, ListItem } from 'react-native-elements';
+import { RouteProp, useRoute } from '@react-navigation/native'
+;
+type EditTaskScreenRouteProp = RouteProp<RootStackParamList, 'EditTaskScreen'>;
 
 
 type Step = {
-    text: string;
-    description: string,
+    description: string;
+    name: string,
     imageUri?: string;
 };
 
-interface RegisterStudentprops {
-  	ruta: String;
-}
 
 
+const EditTask: React.FC<RegisterStudentprops> = () => {
 
-const CreateTaskMenu: React.FC<RegisterStudentprops> = ({ruta}) => {
+    const route = useRoute<EditTaskScreenRouteProp>();
+    const { taskNameOriginal } = route.params;
+
 	const [taskName, setTaskName] = useState('');
 	const [taskSteps, setTaskSteps] = useState<Step[]>([]);
 	const [currentStepText, setCurrentStepText] = useState('');
@@ -27,8 +29,6 @@ const CreateTaskMenu: React.FC<RegisterStudentprops> = ({ruta}) => {
 	const [taskdescription, setTaskDescription] = useState('');
 	const [imageUriTask, setImageUriTask] = useState<string | undefined>(undefined);
 	const [imageUri, setImageUri] = useState<string | undefined>(undefined);
-	const [videoUri, setVideoUri] = useState<string | undefined>(undefined);
-	const [isPlaying, setIsPlaying] = useState(false);
 
 	const stringToDate = (dateString: string) => {
 		// Dividir la cadena en partes: día, mes, año
@@ -52,13 +52,8 @@ const CreateTaskMenu: React.FC<RegisterStudentprops> = ({ruta}) => {
 			includeBase64: false, 
 		});
 
-		console.log(result);
-
-		if (result.assets && result.assets.length > 0) {
-			setImageUri(result.assets[0].uri);
-			//setImageUri("./ruta/por/defecto/paso");
-		} else {
-			console.log('Error', 'Por favor, selecciona una imagen.');
+		if (result.assets ) {
+		    setImageUri(result.assets[0].uri);
 		}
 	};
 
@@ -70,35 +65,17 @@ const CreateTaskMenu: React.FC<RegisterStudentprops> = ({ruta}) => {
 
 		console.log(result);
 
-		if (result.assets && result.assets.length > 0) {
+		if (result.assets) {
 			setImageUriTask(result.assets[0].uri);
-			//setImageUriTask("./ruta/por/defecto/tarea");
-		} else {
-			console.log('Error', 'Por favor, selecciona una imagen.');
 		}
   	};
 
     // Función para añadir el paso actual a la lista de pasos
     const addStep = async () => {
-		if (!currentStepText.trim()) {
-			console.log('Error', 'Por favor, introduce el texto del paso.');
-			return;
-		}
-
-		if (!taskdescription.trim()) {
-			console.log('Error', 'Por favor, introduce la descripcion del paso.');
-			return;
-		}
-
-		// Verifica si se seleccionaron una imagen y un video
-		if (!imageUri  && !videoUri) {
-			console.log('Error', 'Por favor, selecciona una imagen.');
-			return;
-		}
 
 		const newStep: Step = {
-			description: taskdescription,
-			text: currentStepText,
+			name: taskdescription,
+			description: currentStepText,
 			imageUri: imageUri,
 		};
 
@@ -106,7 +83,6 @@ const CreateTaskMenu: React.FC<RegisterStudentprops> = ({ruta}) => {
 		setTaskDescription('');
 		setImageUriTask(undefined);
 		setImageUri(undefined);
-		setVideoUri(undefined);
 
 		// Añadir el paso a la lista
 		setTaskSteps([...taskSteps, newStep]);
@@ -119,56 +95,51 @@ const CreateTaskMenu: React.FC<RegisterStudentprops> = ({ruta}) => {
 
   	const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
-  	const addTask = async () => {
+    const pressModifyButton = async () => {
+      
+        const updatedFields: Record<string, any> = {};
+  
+        if (taskName) updatedFields.nombre = taskName;
+        if (taskDate) updatedFields.fechaCreacion = taskDate;
+        if (taskSteps.length>0) updatedFields.pasos = taskSteps;
+        if (imageUriTask) updatedFields.imagenTarea = imageUriTask;
 
-		if (!taskName.trim() || !taskDate.trim() ||taskSteps.length === 0) {
-			console.log('Error', 'Por favor, completa todos los campos antes de añadir la tarea');
-			console.log('Por favor, completa todos los campos antes de añadir la tarea');
-			return;
-		}
+        try {
+          const response = await fetch('https://api.jsdu9873.tech/api/tasks/update', {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify({ taskNameOriginal, ...updatedFields, }),
+              
+          });
+          console.log(JSON.stringify(updatedFields));
 
-		try {
-			const response = await fetch('https://api.jsdu9873.tech/api/tasks/add', {
-				method: 'POST',
-				headers: { 'Content-Type': 'application/json' },
-				body: JSON.stringify({
-					nombre: taskName, // Nombre de la tarea
-					fechaCreacion: stringToDate(taskDate), // Fecha de la tarea
-					imagenTarea: imageUriTask,
-					pasos: taskSteps.map(step => ({
-						name: step.text,
-						description: step.description,
-						imageUri: step.imageUri
-					})),
-				}),
-			});
-			const result = await response.json();
-			if (response.ok) {
-				setTaskName('');
-				setTaskDate('');
-				setTaskSteps([]);
-				setCurrentStepText('');
-				setTaskDescription('');
-				setImageUri(undefined);
-				setVideoUri(undefined);
-				setImageUriTask(undefined);
-				console.log('Éxito', result.message); 
-				console.log(result.message || 'Tarea agregada con éxito');
-			} else {
-				console.log('Error', result.message || 'Hubo un problema al agregar la tarea.');
-				console.log(result.message || 'Hubo un problema al agregar la tarea.');
-			}
-		} catch (error) {
-			console.error(error);
-			console.log('Error', 'No se pudo conectar con el servidor.');
-			console.log('No se pudo conectar con el servidor.');
-		}
-  };
+          const result = await response.json();
+          if (response.ok) {
+            setTaskName('');
+            setTaskSteps([]);
+            setCurrentStepText('');
+            setTaskDate('');
+            setTaskDescription('');
+            setImageUriTask(undefined);
+            setImageUri(undefined);
+
+            console.log('Tarea modificada exitosamente');
+            }
+            else{
+                console.log("no se ha modificado")
+            }
+        } 
+        catch (error) {
+          console.log('Error al modificar la tarea');
+        }
+
+        navigation.navigate('ListTaskScreen');
+      };
 
   
   return (
     <View style={styles.formContainer}>
-        <Text style={styles.title}>Crear Tareas</Text>
+        <Text style={styles.title}>Modificar Tarea : {taskNameOriginal}</Text>
         <View style={styles.formContainer}>
             <Text style={styles.label}>Nombre de la tarea</Text>
             <TextInput
@@ -204,11 +175,23 @@ const CreateTaskMenu: React.FC<RegisterStudentprops> = ({ruta}) => {
 				onChangeText={setTaskDescription}
             />
 
+            <TouchableOpacity style={styles.button} onPress={selectImageTask}>
+              	<Text style={styles.buttonText}>Seleccionar Imagen de la tarea</Text>
+            </TouchableOpacity>
+
+
+
+			{/* <Text> {imageUriTask} </Text> */}
 		
             <TouchableOpacity style={styles.button} onPress={selectImageStep}>
               	<Text style={styles.buttonText}>Seleccionar Imagen del paso</Text>
             </TouchableOpacity>
 
+			{/* <Text> {imageUri} </Text> */}
+
+            {/* {<TouchableOpacity style={styles.button} onPress={selectVideo}>
+                <Text style={styles.buttonText}>Seleccionar Video</Text>
+            </TouchableOpacity>} */}
 
             <TouchableOpacity style={styles.button} onPress={addStep}>
               	<Text style={styles.buttonText}>Añadir Paso</Text>
@@ -229,6 +212,21 @@ const CreateTaskMenu: React.FC<RegisterStudentprops> = ({ruta}) => {
                   {item.imageUri && (
                     <Image source={{ uri: item.imageUri }} style={styles.imagePreview} />
                   )}
+                  {/* {item.videoUri && (
+                    <View style={{ alignItems: 'center' }}>
+                        <VideoView
+                            style={styles.videoPreview}
+                            player={player}
+                            allowsFullscreen
+                            allowsPictureInPicture
+                        />
+                        <Button
+                            title={isPlaying ? 'Pause' : 'Play'}
+                            onPress={togglePlayPause}
+                        />
+                    </View>
+                )} */}
+
 
                   <TouchableOpacity
                     onPress={() => removeStep(index)}
@@ -245,13 +243,9 @@ const CreateTaskMenu: React.FC<RegisterStudentprops> = ({ruta}) => {
               style={styles.stepsList}
             />
 
-            <TouchableOpacity style={styles.button} onPress={selectImageTask}>
-              	<Text style={styles.buttonText}>Seleccionar Imagen de la tarea</Text>
-            </TouchableOpacity>
-
             
-            <TouchableOpacity style={styles.button} onPress={addTask}>
-                    <Text style={styles.buttonText}>Añadir Tarea</Text>
+            <TouchableOpacity style={styles.button} onPress={pressModifyButton}>
+                    <Text style={styles.buttonText}>Modificar Tarea</Text>
             </TouchableOpacity>
         </View>
     </View>
@@ -383,5 +377,5 @@ const styles = StyleSheet.create({
 
 
 
-export default CreateTaskMenu;
+export default EditTask;
  

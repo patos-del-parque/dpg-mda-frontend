@@ -8,35 +8,38 @@ import UserCardWithButton from  '../components/UserCardWithButton';
 const ListStudentScreen: React.FC = () =>{
 
   const windowWidth = Dimensions.get('window').width;
-  const [users, setUsers] = useState<{ name: string; aula: string; lectura: boolean,imagen: boolean,video: boolean; }[]>([]);
+  const [users, setUsers] = useState<{ name: string; aula: string; avatar: string; lectura: boolean,imagen: boolean,video: boolean; }[]>([]);
+
+
+  // Función para obtener los datos de la API
+  const fetchUsers = async () => {
+    try {
+      const response = await fetch('https://api.jsdu9873.tech/api/students/get', {
+        method: 'GET',
+        headers: { 'Content-Type': 'application/json' },
+      });
+
+      const result = await response.json();
+      if (response.ok) {
+        const nombres = result.students.map((student: { nombre: string; aula: string, avatar: string, lectura: boolean,imagen: boolean,video:boolean }) => ({
+          name: student.nombre,
+          aula: student.aula,
+          avatar: student.avatar,
+          lectura: student.lectura,
+          imagen: student.imagen,
+          video: student.video,
+        }));
+        setUsers(nombres); // Actualizamos el estado con los nombres obtenidos
+      } else {
+        Alert.alert('Error', result.message || 'Hubo un problema al obtener los estudiantes.');
+      }
+    } catch (error) {
+      Alert.alert('Error', 'No se pudo obtener la lista de estudiantes.');
+    }
+  };
 
   useEffect(() => {
-    // Función para obtener los datos de la API
-    const fetchUsers = async () => {
-      try {
-        const response = await fetch('https://api.jsdu9873.tech/api/students/get', {
-          method: 'GET',
-          headers: { 'Content-Type': 'application/json' },
-        });
-
-        const result = await response.json();
-        if (response.ok) {
-          const nombres = result.students.map((student: { nombre: string; aula: string,lectura: boolean,imagen: boolean,video:boolean }) => ({
-            name: student.nombre,
-            aula: student.aula,
-            lectura: student.lectura,
-            imagen: student.imagen,
-            video: student.video,
-          }));
-          setUsers(nombres); // Actualizamos el estado con los nombres obtenidos
-        } else {
-          Alert.alert('Error', result.message || 'Hubo un problema al obtener los estudiantes.');
-        }
-      } catch (error) {
-        Alert.alert('Error', 'No se pudo obtener la lista de estudiantes.');
-      }
-    };
-
+    
     fetchUsers();
   }, []); // Se ejecuta solo al montar el componente
 
@@ -56,7 +59,13 @@ const ListStudentScreen: React.FC = () =>{
       renderItem={({ item }) => (
         <UserCardWithButton
           name={item.name}
-          urlPhoto="https://reactnative.dev/docs/assets/p_cat2.png"
+          aula={item.aula}
+          //urlPhoto={item.avatar}
+          lectura={item.lectura}
+          imagen={item.imagen}
+          video={item.video}
+          //urlPhoto="https://reactnative.dev/docs/assets/p_cat2.png"
+          urlPhoto={item.avatar}
         />
       )}
     />

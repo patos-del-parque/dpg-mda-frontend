@@ -25,14 +25,14 @@ const EraseStudent: React.FC<EraseStudentprops> = ({ ruta, name }) => {
       });
       const result = await response.json();
       if (response.ok) {
-        Alert.alert('Éxito', result.message); 
-        alert(result.message || 'Profesor dado de baja exitosamente');
+        console.log('Éxito', result.message); 
+        console.log(result.message || 'Estudiante dado de baja exitosamente');
       } else {
-        Alert.alert('Error', result.message || 'Hubo un problema al dar de baja al profesor.');
-        alert(result.message || 'Hubo un problema al dar de baja al profesor.');
+        console.log('Error', result.message || 'Hubo un problema al dar de baja al estudiante.');
+        console.log(result.message || 'Hubo un problema al dar de baja al estudiante.');
       }
   } catch (error) {
-      alert('Error al dar de baja al profesor');
+    console.log('Error al dar de baja al estudiante');
   }
   };
 
@@ -43,7 +43,7 @@ const EraseStudent: React.FC<EraseStudentprops> = ({ ruta, name }) => {
             <Text style={styles.label}>Estudiante: {name}</Text>
     
             <Pressable style={styles.button} onPress={pressButton}>
-            <Text style={styles.buttonText}>Dar de baja</Text>
+              <Text style={styles.buttonText}>Dar de baja</Text>
             </Pressable>
         </View>
     );

@@ -4,12 +4,13 @@ import EraseTeacher from '../components/EraseTeacher';
 
 
 
-const EraseTeacherScreen: React.FC = () =>{
-return(
-    <View style={styles.container}>
-        <EraseTeacher  ruta='Admin'/>
-    </View>
-  );
+const EraseTeacherScreen: React.FC = ({ route }) =>{
+  const { name } = route.params;
+  return(
+      <View style={styles.container}>
+          <EraseTeacher  ruta='ListTeacher' name={name}/>
+      </View>
+    );
 };
 
 

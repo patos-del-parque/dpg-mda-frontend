@@ -1,50 +1,38 @@
 import React from 'react';
-import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { View, Text, StyleSheet } from 'react-native';
 import SimpleTable from '../components/SimpleTable';
 import { RouteProp, useRoute } from '@react-navigation/native';
 import UserCard from '@/components/UserCard';
- 
 
 type LoginStudentDefaultRouteProp = RouteProp<RootStackParamList, 'LoginStudentDefault'>;
 
 const LoginStudentDefault: React.FC = () => {
     const route = useRoute<LoginStudentDefaultRouteProp>();
     const { idPhoto } = route.params; // Recibe idPhoto como índice
-
-/*     const users = [
-        { name: 'Mario Medina Lopez', email: 'juan@example.com' },
-        { name: 'Carlos Fernandez Arrabal', email: 'ana@example.com' },
-        { name: 'Silvia Fernandez Arrabal', email: 'luis@example.com' },
-        { name: 'Alonso Doña Martinez', email: 'alonsodmx@gmail.com' },
-        // Agrega más usuarios aquí
-    ];
- */
-    // Selecciona el usuario basado en el índice idPhoto
-    //const user = users.find(u => u.name === idPhoto);
+    const { foto } = route.params;
 
     return (
-        <View style={styles.container}>
+        <View style={styles.screen}>
             <Text style={styles.title}>INTRODUCE LA CONTRASEÑA</Text>
-            <UserCard name={idPhoto} urlPhoto={"https://reactnative.dev/docs/assets/p_cat2.png"} estado={1} />
+            <UserCard name={idPhoto} urlPhoto={foto} estado={1} />
             <SimpleTable ruta='UserMenuScreen' name={idPhoto} />
         </View>
     );
 };
 
 const styles = StyleSheet.create({
-    container: {
-      padding: 15,
-    },
-    tableHeader: {
-      backgroundColor: '#DCDCDC',
+    screen: {
+        flex: 1, // Ocupa todo el espacio disponible en la pantalla
+        backgroundColor: '#EDE7F6', // Color de fondo para toda la pantalla
+        padding: 15,
     },
     title: {
         fontSize: 26,
         fontWeight: 'bold',
-        color: '#000000',
+        color: '#000000', // Asegúrate de usar un color que contraste
         marginBottom: 16,
         textAlign: 'center',
-      },
-  });
+    },
+});
 
 export default LoginStudentDefault;

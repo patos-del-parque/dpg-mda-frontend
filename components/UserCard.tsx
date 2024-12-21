@@ -16,20 +16,14 @@ type UserCardProps = {
 const UserCard: React.FC<UserCardProps> = ({ name, urlPhoto ,estado, lectura,imagen,video}) => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
     const handlePress = () => {
-        if (lectura) {
-            navigation.navigate('Home');
-        }else if (imagen){
-            navigation.navigate('LoginStudentDefault', { idPhoto: name });
-        }else if(video){
-            navigation.navigate('LoginStudentDefault', { idPhoto: name });
-        }
+        navigation.navigate('LoginStudentDefault', { idPhoto: name, foto: urlPhoto })
     };
 
     return (
         <TouchableOpacity onPress={handlePress} style={styles.touchable}>
             <Card containerStyle={styles.card}>
                 <Image
-                    source={{ uri: 'https://cdn-icons-png.flaticon.com/512/3984/3984577.png' }} // Usa la URL de la imagen pasada como prop
+                    source={{ uri: urlPhoto }} // Usa la URL de la imagen pasada como prop
                     style={styles.image}
                 />
                 <Text style={styles.title}>{name}</Text>
@@ -39,10 +33,10 @@ const UserCard: React.FC<UserCardProps> = ({ name, urlPhoto ,estado, lectura,ima
                             name="arrow-right-circle"
                             type="feather"
                             color="#007BFF"
-                            size={34}
+                            size={54}
                             onPress={handlePress} // También se puede tocar la flecha
                         />
-                        <Text>Avanzar</Text>
+                        <Text style={styles.salir}>AVANZAR</Text>
                     </View>
                 )}
             </Card>
@@ -54,7 +48,7 @@ const styles = StyleSheet.create({
     card: {
         alignSelf: 'center',
         width: '90%', // Ajuste para un ancho razonable en dispositivos grandes
-        maxWidth: 400, // Límite máximo de ancho para dispositivos grandes
+        maxWidth: 500, // Límite máximo de ancho para dispositivos grandes
         padding: 16,
         borderRadius: 8,
         shadowColor: '#000',
@@ -67,17 +61,21 @@ const styles = StyleSheet.create({
         alignSelf: 'center',
     },
     image: {
-        width: 100, // Tamaño fijo para la imagen
-        height: 100, // Tamaño fijo para la imagen
+        width: 150, // Tamaño fijo para la imagen
+        height: 150, // Tamaño fijo para la imagen
         alignSelf: 'center',
         borderRadius: 8, // Opcional, para bordes redondeados
         resizeMode: 'cover', // Puede usar 'contain' si lo prefieres
     },
     title: {
         textAlign: 'center',
-        fontSize: 18,
+        fontSize: 30,
         color: '#333',
         marginTop: 8,
+    },
+    salir: {
+        fontSize: 20,
+        color: '#333',
     },
     iconContainer: {
         marginTop: 12,

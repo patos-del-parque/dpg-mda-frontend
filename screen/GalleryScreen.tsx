@@ -3,7 +3,7 @@ import { View, ScrollView, StyleSheet, Text, Animated, Alert } from 'react-nativ
 import UserCard from '../components/UserCard';
 
 const GalleryScreen: React.FC = () => {
-  const [users, setUsers] = useState<{ name: string; aula: string; lectura: boolean,imagen: boolean,video: boolean; }[]>([]);
+  const [users, setUsers] = useState<{ name: string; aula: string; avatar:string ; lectura: boolean,imagen: boolean,video: boolean; }[]>([]);
   const [scaleValues, setScaleValues] = useState<Animated.Value[]>([]);
 
   const handleMouseEnter = (index: number) => {
@@ -31,9 +31,10 @@ const GalleryScreen: React.FC = () => {
 
         const result = await response.json();
         if (response.ok) {
-          const nombres = result.students.map((student: { nombre: string; aula: string,lectura: boolean,imagen: boolean,video:boolean }) => ({
+          const nombres = result.students.map((student: { nombre: string; aula: string; avatar: string; lectura: boolean;imagen: boolean;video:boolean }) => ({
             name: student.nombre,
             aula: student.aula,
+            avatar: student.avatar,
             lectura: student.lectura,
             imagen: student.imagen,
             video: student.video,
@@ -41,10 +42,10 @@ const GalleryScreen: React.FC = () => {
           setUsers(nombres); // Actualizamos el estado con los nombres obtenidos
           setScaleValues(nombres.map(() => new Animated.Value(1))); // Creamos las animaciones para cada usuario
         } else {
-          Alert.alert('Error', result.message || 'Hubo un problema al obtener los estudiantes.');
+          console.log('Error', result.message || 'Hubo un problema al obtener los estudiantes.');
         }
       } catch (error) {
-        Alert.alert('Error', 'No se pudo obtener la lista de estudiantes.');
+        console.log('Error', 'No se pudo obtener la lista de estudiantes.');
       }
     };
 
@@ -63,7 +64,7 @@ const GalleryScreen: React.FC = () => {
               onMouseEnter={() => handleMouseEnter(index)}
               onMouseLeave={() => handleMouseLeave(index)}
             >
-              <UserCard name={user.name} urlPhoto={"https://reactnative.dev/docs/assets/p_cat2.png"} estado={0} lectura={user.lectura} imagen={user.imagen} video={user.video} />
+              <UserCard name={user.name} urlPhoto={user.avatar} estado={0} lectura={user.lectura} imagen={user.imagen} video={user.video} />
             </Animated.View>
           ))}
         </ScrollView>
@@ -75,7 +76,7 @@ const GalleryScreen: React.FC = () => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#11388e',
+    backgroundColor: '#EDE7F6',
   },
   gradient: {
     flex: 1,
@@ -90,9 +91,9 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   title: {
-    fontSize: 26,
+    fontSize: 30,
     fontWeight: 'bold',
-    color: '#FFF',
+    color: '#000',
     marginBottom: 16,
     textAlign: 'center',
   },

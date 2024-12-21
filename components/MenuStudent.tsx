@@ -28,38 +28,48 @@ interface LoginTextProps {
   datos: Array<{
     nombreAula: string;
     imageAula: string;
+    pasos: [];
+    realizada: boolean;
+    taskId: string;
   }>;
+  studentId : string;
+  idEstudiante : string;
 }
 
 type MenuStudentScreenRouteProp = RouteProp<RootStackParamList, 'MenuStudentScreen'>;
 
-const MenuStudent: React.FC<LoginTextProps> = ({ ruta, datos }) => {
+const MenuStudent: React.FC<LoginTextProps> = ({ ruta, datos,studentId,idEstudiante }) => {
   // Hook de navegación para cambiar de pantalla
   const navigation = useNavigation<NavigationProp<RootStackParamList>>();
 
   // Hook para acceder a los parámetros de la ruta actual
   const route = useRoute<MenuStudentScreenRouteProp>();
-  const { taskCompleted, nombreAula: completedAula } = route.params || {};
+  //const { taskCompleted, nombreAula: completedAula,imageAula,pasos } = route.params || {};
+  //const { nombreAula, imageAula, pasos } = route.params;
 
+  //const {nombreAula,imageAula,pasos} = datos[0];
+  const studentID = studentId;
+  const IDestudiante = idEstudiante;
+console.log(`Estoyyy mostrando el studentID:  ${datos[0].realizada}`)
   // Estado para manejar las tareas completadas
   const [completedTasks, setCompletedTasks] = useState<{ [aula: string]: boolean }>({});
 
   /**
    * Actualiza el estado de tareas completadas cuando los parámetros cambian.
    */
-  useEffect(() => {
+/*   useEffect(() => {
     if (taskCompleted && completedAula && !completedTasks[completedAula]) {
       setCompletedTasks((prev) => ({ ...prev, [completedAula]: true }));
     }
-  }, [taskCompleted, completedAula]);
+  }, [taskCompleted, completedAula]); */
 
   /**
    * Navega a la pantalla especificada y pasa los parámetros del elemento seleccionado.
    * @param {string} nombreAula - Nombre del aula.
    * @param {string} imageAula - URL de la imagen del aula.
    */
-  const handleCreateTasks = (nombreAula: string, imageAula: string) => {
-    navigation.navigate(ruta, { nombreAula, imageAula });
+  const handleCreateTasks = (nombreAula: string, imageAula: string ,pasos: [],taskId:string,IDestudiante: string) => {
+    navigation.navigate(ruta, { nombreAula, imageAula,pasos,studentID,taskId,IDestudiante});
   };
 
   return (
@@ -74,11 +84,11 @@ const MenuStudent: React.FC<LoginTextProps> = ({ ruta, datos }) => {
               </View>
               <TouchableOpacity
                 style={styles.arrowButton}
-                onPress={() => handleCreateTasks(dato.nombreAula, dato.imageAula)}
+                onPress={() => handleCreateTasks(dato.nombreAula, dato.imageAula,dato.pasos,dato.taskId,IDestudiante)}
               >
                 <FontAwesome name="arrow-right" size={26} color="#00796b" />
               </TouchableOpacity>
-              {completedTasks[dato.nombreAula] && (
+              {dato.realizada && (
                 <FontAwesome name="check-circle" size={30} color="green" />
               )}
             </View>
@@ -94,7 +104,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     padding: 16,
-    backgroundColor: '#f0f0f0',
+    backgroundColor: '#EDE7F6',
   },
   row: {
     flexDirection: 'row',

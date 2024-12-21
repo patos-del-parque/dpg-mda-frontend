@@ -1,95 +1,145 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
-import { RouteProp, useRoute, useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../navigation/StackNavigator';
-import NumeroMenu from '@/components/NumeroMenu';
+import { View, Text, Image, StyleSheet, TouchableOpacity } from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 
-// Autor Alonso
-
-type SpecificTaskScreenRouteProp = RouteProp<RootStackParamList, 'SpecificTaskScreen'>;
-
-const SpecificTaskScreen: React.FC = () => {
-  const route = useRoute<SpecificTaskScreenRouteProp>();
+const StepsComponent = () => {
+  const route = useRoute(); // Obtiene los parámetros pasados a esta pantalla
   const navigation = useNavigation(); // Para manejar la navegación
-  const { nombreAula, imageAula } = route.params;
 
-  const prueba = {
-    tareas: [
-      {
-        id: 1,
-        title: 'Lavarse los dientes',
-        photo: 'https://reactnative.dev/docs/assets/p_cat2.png',
-        descripcion: 'Lavarse los dientes con el cepillo y la pasta de dientes',
-        pasos: [
-          { id: 101, description: 'Paso 1, coger un cepillo', imageUrl: 'https://reactnative.dev/docs/assets/p_cat2.png' },
-          { id: 102, description: 'Paso 2, esparcir la pasta de dientes por todo el cabezal', imageUrl: 'https://reactnative.dev/docs/assets/p_cat2.png' },
-          { id: 103, description: 'Paso 3, aclaramos con un poco de agua', imageUrl: 'https://reactnative.dev/docs/assets/p_cat2.png' },
-          { id: 104, description: 'Paso 4, lavarse los dientes', imageUrl: 'https://reactnative.dev/docs/assets/p_cat2.png' },
-          { id: 105, description: 'Paso 5, aclarar con agua y colocar en su sitio el cepillo', imageUrl: 'https://reactnative.dev/docs/assets/p_cat2.png' },
-        ],
-        estado: 0,
-      },
-    ],
-  };
+  const { nombreAula, imageAula, pasos, studentID,taskId,IDestudiante } = route.params;
+
+  /*const [IDestudiante, setIDestudiante] = useState('');
+  const [taskID, settaskID] = useState('');*/
+  /*const [password, setPasswpord] = useState('');
+  const [lectura, setLectura] = useState(false);
+  const [imagen, setImagen] = useState(false);
+  const [video, setVideo] = useState(false);
+  const[avatar, setAvatar] = useState('');*/
+
+  const markTaskAsDone = async (IDestudiante: string, taskId: string) => {
+    const url = `https://api.jsdu9873.tech/api/student-tasks/mark-as-done/${IDestudiante}/${taskId}`;
+    
+    try {
+        const response = await fetch(url, {
+            method: 'PUT',  // Usamos PUT porque estás actualizando datos
+            headers: {
+                'Content-Type': 'application/json',  // Tipo de contenido que estás enviando
+            },
+            // Si necesitas enviar datos, puedes agregarlos aquí (aunque no es necesario para tu caso)
+            body: JSON.stringify({
+                // En este caso, no estamos enviando datos adicionales, pero se pueden agregar
+            }),
+        });
+
+        // Comprobar si la respuesta fue exitosa
+        if (!response.ok) {
+            const errorData = await response.json();
+            console.error('Error:', errorData.message);
+            throw new Error(errorData.message);
+        }
+
+        const data = await response.json();
+        console.log('Tarea marcada como realizada:', data.assignment);
+        // Puedes hacer algo con la respuesta aquí, por ejemplo actualizar el estado
+    } catch (error) {
+        console.error('Error al marcar la tarea:', error);
+        console.log(`${IDestudiante} yyyyy ${taskId}`)
+    }
+};
+
+
+  if (!pasos || pasos.length === 0) {
+    return (
+      <View style={styles.container}>
+        <Text style={styles.message}>No hay pasos disponibles</Text>
+      </View>
+    );
+  }
 
   const [currentStep, setCurrentStep] = useState(0); // Controla el paso actual
-  const totalSteps = prueba.tareas[0].pasos.length;
 
   const handleNextStep = () => {
-    if (currentStep < totalSteps - 1) {
+    if (currentStep < pasos.length - 1) {
       setCurrentStep(currentStep + 1);
     } else {
-      // Si es el último paso, redirige a la primera página
-      navigation.navigate('UserTaskScreen', {taskCompleted:true, nombreAula: nombreAula}); // Asegúrate de que 'HomeScreen' esté definido en tu stack
-    
+      // Si es el último paso, redirige a otra pantalla
+      //marcar como completado
+      markTaskAsDone(IDestudiante,taskId );
+      navigation.navigate('UserTaskScreen', {name : studentID});
     }
   };
 
   return (
     <View style={styles.container}>
+      {/* Información general del aula */}
       <Text style={styles.title}>{nombreAula}</Text>
-      <Image style={styles.image} source={{ uri: imageAula }} />
+      <Image source={{ uri: imageAula }} style={styles.image} />
 
+      {/* Paso actual */}
       <View style={styles.stepContainer}>
-        <Text style={styles.stepDescription}>{prueba.tareas[0].pasos[currentStep].description}</Text>
-        <Image style={styles.image} source={{ uri: prueba.tareas[0].pasos[currentStep].imageUrl }} />
+        <Image source={{ uri: pasos[currentStep].imageUri }} style={styles.stepImage} />
+        <View style={styles.stepDetails}>
+          <Text style={styles.stepName}>{pasos[currentStep].name}</Text>
+          <Text style={styles.stepDescription}>{pasos[currentStep].description}</Text>
+        </View>
       </View>
 
+      {/* Botón para avanzar al siguiente paso */}
       <TouchableOpacity style={styles.button} onPress={handleNextStep}>
-        <Text style={styles.buttonText}>{currentStep < totalSteps - 1 ? 'Siguiente Paso' : 'Finalizar'}</Text>
+        <Text style={styles.buttonText}>
+          {currentStep < pasos.length - 1 ? 'Siguiente Paso' : 'Finalizar'}
+        </Text>
       </TouchableOpacity>
-      
     </View>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
-    padding: 15,
-    alignItems: 'center',
+    flex: 1,
+    padding: 16,
+    backgroundColor: '#EDE7F6',
   },
   title: {
-    fontSize: 20,
+    fontSize: 24,
     fontWeight: 'bold',
-    marginBottom: 10,
+    marginBottom: 16,
   },
   image: {
-    width: 150,
-    height: 150,
-    borderRadius: 10,
+    width: '100%',
+    height: 200,
     resizeMode: 'cover',
-    margin: 10,
-    borderWidth: 2,
-    borderColor: '#ddd',
+    marginBottom: 16,
   },
   stepContainer: {
     alignItems: 'center',
-    marginVertical: 20,
+    marginBottom: 16,
+    backgroundColor: '#fff',
+    padding: 10,
+    borderRadius: 8,
+    shadowColor: '#000',
+    shadowOffset: { width: 0, height: 2 },
+    shadowOpacity: 0.1,
+    shadowRadius: 4,
+    elevation: 3,
+  },
+  stepImage: {
+    width: 150,
+    height: 150,
+    borderRadius: 10,
+    marginBottom: 10,
+  },
+  stepDetails: {
+    alignItems: 'center',
+  },
+  stepName: {
+    fontSize: 18,
+    fontWeight: 'bold',
   },
   stepDescription: {
-    fontSize: 16,
+    fontSize: 14,
+    color: '#555',
     textAlign: 'center',
-    marginBottom: 10,
   },
   button: {
     backgroundColor: '#4CAF50',
@@ -103,6 +153,11 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
+  message: {
+    fontSize: 18,
+    textAlign: 'center',
+    marginTop: 20,
+  },
 });
 
-export default SpecificTaskScreen;
+export default StepsComponent;

@@ -24,41 +24,62 @@ import NumeroMenuScreen from '@/screen/NumeroMenuScreen';
 import AssignTaskScreen from '@/screen/AssignTaskScreen';
 import RequestMaterials from '@/screen/RequestMaterialsScreen';
 import ListStudentScreen from '@/screen/ListStudentScreen';
+import ListTeacherScreen from '@/screen/ListTeacherScreen';
 import TaskScreen from '@/screen/TaskScreen';
 import StudentsScreen from '@/screen/StudentsScreen';
 import TeacherAdminScreen from '@/screen/TeacherAdminScreen';
 import AssignMaterialsRequestsScreen from '@/screen/AssingMaterialsRequestsScreen';
 import SpecificTaskScreen from '@/screen/SpecificTaskScreen';
+import ListMaterialScreen from '@/screen/ListMaterialsScreen';
+import MaterialsScreen from '@/screen/MaterialsScreen';
+import RegisterMaterialScreen from '@/screen/RegisterMaterialScreen';
+import SeeRequestMaterialScreen from '@/screen/SeeRequestMaterialScreen';
+import ModifyMaterialScreen from '@/screen/ModifyMaterialScreen';
+import SeeTaskProgressScreen from '@/screen/SeeTaskProgressScreen';
+import EditUserTaskScreen from '@/screen/EditUserTaskScreen';
+import ListTaskScreen from '@/screen/ListTaskScreen';
+import EditTaskScreen from '@/screen/EditTaskScreen';
+
 
 export type RootStackParamList = {
   Home: undefined;
   Galeria: undefined;
   LoginAdmin: undefined;
   LoginTeacher: undefined;
-  LoginStudentDefault: { idPhoto: String};
+  LoginStudentDefault: { idPhoto: String, foto: String};
   Admin: undefined;
   Teacher:undefined;
   TaskMenu: undefined;
   RegisterStudent: undefined;
   ModifyStudent: { name: string };
+  ModifyMaterial: { name: string }
   EraseStudent: { name: string };
   RegisterTeacher: undefined;
-  EraseTeacher: undefined;
-  UserMenuScreen : undefined;
-  UserTaskScreen : undefined;
+  EraseTeacher: { name: string };
+  UserMenuScreen : { name: string, isComedorActive: boolean };
+  UserTaskScreen : { name: string};
+  EditUserTaskScreen : { name: string};
   ModifySkillsScreen : { name: string };
   RequestMaterials: undefined;
-  ModifyTeacher: undefined;
+  ModifyTeacher: { name: string };
   TaskScreen: undefined;
   ListStudent: undefined;
+  ListTeacher: undefined;
   MenuStudentScreen: {taskCompleted: boolean, nombreAula: string};
-  AssignTaskScreen: undefined;
+  AssignTaskScreen: {name: string};
   NumeroMenuScreen: { nombreAula: string, imageAula:string};
   StudentsScreen: undefined;
   TeacherAdminScreen: undefined;
   SpecificTaskScreen: undefined;
   AssignMaterialsRequestsScreen: {name: string};
   DaltonicoLoginScreen: { idPhoto: String};
+  ListMaterialScreen: undefined;
+  MaterialsScreen: undefined;
+  RegisterMaterialScreen: undefined;
+  SeeRequestMaterialScreen: undefined;
+  SeeTaskProgressScreen: undefined;
+  ListTaskScreen: undefined;
+  EditTaskScreen: { taskNameOriginal: String };
 };
 
 const Stack = createNativeStackNavigator<RootStackParamList>();
@@ -77,23 +98,34 @@ const StackNavigator: React.FC = () => {
       <Stack.Screen name="TaskMenu" component={CreateTaskScreen}/>
       <Stack.Screen name="RegisterStudent" component={RegisterStudentScreen}/>
       <Stack.Screen name="ModifyStudent" component={ModifyStudentScreen}/>
+      <Stack.Screen name="ModifyMaterial" component={ModifyMaterialScreen}/>
       <Stack.Screen name="EraseStudent" component={EraseStudentScreen}/> 
       <Stack.Screen name="RegisterTeacher" component={RegisterTeacherScreen}/>
       <Stack.Screen name="EraseTeacher" component={EraseTeacherScreen}/>
       <Stack.Screen name="ModifyTeacher" component={ModifyTeacherScreen}/>
       <Stack.Screen name="UserMenuScreen" component= {UserMenuScreen}/>
       <Stack.Screen name="UserTaskScreen" component= {UserTaskScreen}/>
+      <Stack.Screen name="EditUserTaskScreen" component= {EditUserTaskScreen}/>
       <Stack.Screen name="ModifySkillsScreen" component= {ModifySkillsScreen}/>
       <Stack.Screen name="MenuStudentScreen" component= {MenuStudentScreen}/>
       <Stack.Screen name="NumeroMenuScreen" component= {NumeroMenuScreen}/>
       <Stack.Screen name="AssignTaskScreen" component= {AssignTaskScreen}/>
-      <Stack.Screen name="ListStudent" component= {ListStudentScreen}/>    
+      <Stack.Screen name="ListStudent" component= {ListStudentScreen}/>
+      <Stack.Screen name="ListTeacher" component= {ListTeacherScreen}/> 
       <Stack.Screen name="TaskScreen" component= {TaskScreen}/>    
       <Stack.Screen name="StudentsScreen" component= {StudentsScreen}/>    
       <Stack.Screen name="TeacherAdminScreen" component= {TeacherAdminScreen}/>
       <Stack.Screen name="AssignMaterialsRequestsScreen" component= {AssignMaterialsRequestsScreen}/>
       <Stack.Screen name="SpecificTaskScreen" component= {SpecificTaskScreen}/>
-      <Stack.Screen name="DaltonicoLoginScreen" component= {LoginStudentDefault}/>    
+      <Stack.Screen name="DaltonicoLoginScreen" component= {LoginStudentDefault}/>
+      <Stack.Screen name="ListMaterialScreen" component= {ListMaterialScreen} />
+      <Stack.Screen name="MaterialsScreen" component= {MaterialsScreen} />
+      <Stack.Screen name="RegisterMaterialScreen" component= {RegisterMaterialScreen} />         
+      <Stack.Screen name="SeeRequestMaterialScreen" component= {SeeRequestMaterialScreen} /> 
+      <Stack.Screen name="SeeTaskProgressScreen" component= {SeeTaskProgressScreen} />
+      <Stack.Screen name ="ListTaskScreen" component={ListTaskScreen} />  
+      <Stack.Screen name ="EditTaskScreen" component={EditTaskScreen} />  
+
     </Stack.Navigator>
   );
 };

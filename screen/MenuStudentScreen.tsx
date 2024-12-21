@@ -1,29 +1,35 @@
 import React from 'react';
-import { View, StyleSheet, Text, Image } from 'react-native';
-import AdminMenu from  '../components/AdminMenu'; 
-import UserMenuScreen from './UserMenuScreen';
+import { View, StyleSheet, Text, Image, Pressable } from 'react-native';
+import { useRoute, useNavigation } from '@react-navigation/native';
 import MenuStudent from '@/components/MenuStudent';
 
-
+import Icon from 'react-native-vector-icons/FontAwesome';
 const MenuStudentScreen: React.FC = () =>{
+  const navigation = useNavigation();
+  const handleLogout = () => {
+    // Redirigir al login
+    navigation.navigate('Home'); // Cambia 'LoginScreen' por el nombre de tu pantalla de login
+  };
 return(
     <View style={styles.container}>
       <Text style={styles.title}>AULAS DISPONIBLES</Text>
-      <Image source={{ uri:'https://logosnurseryschool.es/nursery/wp-content/uploads/2016/07/Instalaciones-logos-nursery-comedor-1.jpg' }} style={styles.image} />
+      <Image source={{ uri:'https://media.istockphoto.com/id/1165541200/es/vector/dibujos-animados-vectoriales-de-aulas-escolares-o-universitarias.jpg?s=612x612&w=0&k=20&c=dGFjD3gBFNrxDjZb1lPJ1ALZq2eVVTrqz5yIjCCQNFA=' }} style={styles.image} />
       < MenuStudent ruta='NumeroMenuScreen' datos={[
         {
             nombreAula: 'AULA 1',
-            imageAula: 'https://www.solerpalau.com/es-es/blog/wp-content/uploads/2021/01/Confort-termico-colegios.jpg',
+            imageAula: 'https://media.istockphoto.com/id/1165541200/es/vector/dibujos-animados-vectoriales-de-aulas-escolares-o-universitarias.jpg?s=612x612&w=0&k=20&c=dGFjD3gBFNrxDjZb1lPJ1ALZq2eVVTrqz5yIjCCQNFA=',
         },
         {
             nombreAula: 'AULA 2',
-            imageAula: 'https://reactnative.dev/docs/assets/p_cat2.png',
+            imageAula: 'https://media.istockphoto.com/id/1165541200/es/vector/dibujos-animados-vectoriales-de-aulas-escolares-o-universitarias.jpg?s=612x612&w=0&k=20&c=dGFjD3gBFNrxDjZb1lPJ1ALZq2eVVTrqz5yIjCCQNFA=',
         },
-        {
-            nombreAula: 'AULA 3',
-            imageAula: 'https://reactnative.dev/docs/assets/p_cat2.png',
-        },
-    ]}/> 
+        
+    ]}/>
+    {/* Botón Rojo */}
+    <Pressable style={styles.logoutButton} onPress={handleLogout}>
+      <Icon name="sign-out" size={44} color="#fff" style={styles.logoutIcon} />
+      <Text style={styles.logoutText}>SALIR</Text>
+    </Pressable> 
     </View>
   );
 };
@@ -31,7 +37,9 @@ return(
 
 const styles = StyleSheet.create({
   container: {
+    flex:1,
     padding: 15,
+    backgroundColor: '#EDE7F6',
   },
   title: {
     fontSize: 30,
@@ -47,6 +55,21 @@ const styles = StyleSheet.create({
     marginBottom: 15,
     alignSelf: 'center', // Centra la imagen dentro de su contenedor'
 
+  },    
+  logoutButton: {
+    marginTop: 20,
+    backgroundColor: '#FF4F4F', // Color rojo
+    padding: 15,
+    borderRadius: 5,
+    alignItems: 'center',
+  },
+  logoutText: {
+    color: '#fff',
+    fontSize: 30,
+    fontWeight: 'bold',
+  },
+  logoutIcon: {
+    marginRight: 5,
   },
 });
 

@@ -14,6 +14,8 @@ return(
 
 const styles = StyleSheet.create({
   container: {
+    flex:1,
+    backgroundColor:'#EDE7F6',
     padding: 15,
   }
 });

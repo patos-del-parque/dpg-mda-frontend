@@ -12,9 +12,9 @@ const NumeroMenu: React.FC = () => {
     const { nombreAula, imageAula } = route.params; // Obtiene el nombre del aula pasado como parámetro
     
     const menus = [
-        { id: 1, title: 'MENU 1', description: 'Carne', image: '../images/foods/plato_carne.jpg' },
-        { id: 2, title: 'MENU 2',  description: 'Triturado', image: 'https://farm8.staticflickr.com/7033/6796616701_453b354444_b.jpg' },
-        { id: 3, title: 'MENU 3',  description: 'Vegetariano', image: 'https://www.fithappysisters.com/Portals/FitHappySister/Mercadillo/files/Receta-Vegetariana_-Budha-bowl-Horizontal.jpg' },
+        { id: 1, title: 'MENU 1', description: 'CARNE', image: 'https://media.istockphoto.com/id/1371751060/es/foto/bistec-de-ternera-de-solomillo-o-filete-de-rabadilla-a-la-parrilla-medium-rare-en-una-bandeja.jpg?s=612x612&w=0&k=20&c=dfOZFPv5l5zaGJnWomynI7v2VWeqAREWfo8iRDMkie0=' },
+        { id: 2, title: 'MENU 2',  description: 'TRITURADO', image: 'https://farm8.staticflickr.com/7033/6796616701_453b354444_b.jpg' },
+        { id: 3, title: 'MENU 3',  description: 'VEGETARIANO', image: 'https://www.fithappysisters.com/Portals/FitHappySister/Mercadillo/files/Receta-Vegetariana_-Budha-bowl-Horizontal.jpg' },
     ];
 
 
@@ -86,14 +86,14 @@ const NumeroMenu: React.FC = () => {
             </View > 
             <View style={styles.buttonsContainer}>
             <TouchableOpacity onPress={() => { handleNextMenu();  setQuantities(new Array(quantities.length).fill(0)); }}>
-            <FontAwesome name="arrow-right" size={30} color="#00796b" />
+            <FontAwesome name="arrow-right" size={50} color="#00796b" />
             </TouchableOpacity>
             {menuIndex === 2 && (
                     <TouchableOpacity 
                         style={styles.enviarButton} 
                         onPress={() => handleCreateTasks()}
                     >
-                        <Text style={styles.enviarButtonText}>Enviar</Text>
+                        <Text style={styles.enviarButtonText}>ENVIAR</Text>
                     </TouchableOpacity>
                 )}  
             </View> 
@@ -105,7 +105,7 @@ const styles = StyleSheet.create({
     container: {
         flex: 1,
         padding: 16,
-        backgroundColor: '#f0f0f0',
+        backgroundColor: '#EDE7F6',
         alignItems: 'center',
         justifyContent: 'center',
     },
@@ -157,21 +157,24 @@ const styles = StyleSheet.create({
         alignItems: 'center',
     },
     button: {
-        width: 50,
-        height: 50,
+        width: 70,
+        height: 70,
         borderRadius: 15,
         backgroundColor: '#00796b',
         justifyContent: 'center',
         alignItems: 'center',
         marginHorizontal: 5,
+        margin: 30,
+        padding: 30,
+        gap:60,
     },
     buttonText: {
         color: '#fff',
-        fontSize: 18,
+        fontSize: 30,
         fontWeight: 'bold',
     },
     quantity: {
-        fontSize: 18,
+        fontSize: 30,
         fontWeight: 'bold',
         color: '#00796b',
     },
@@ -204,7 +207,7 @@ const styles = StyleSheet.create({
     },
     enviarButtonText: {
         color: '#fff',
-        fontSize: 18,
+        fontSize: 26,
         fontWeight: 'bold',
     },
 });

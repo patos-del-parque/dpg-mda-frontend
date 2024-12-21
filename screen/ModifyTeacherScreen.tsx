@@ -4,12 +4,13 @@ import ModifyTeacher from  '../components/ModifyTeacher';
 
 
 
-const ModifyTeacherScreen: React.FC = () =>{
-return(
-    <View style={styles.container}>
-        <ModifyTeacher ruta='Admin'/>
-    </View>
-  );
+const ModifyTeacherScreen: React.FC = ({ route }) =>{
+  const { name } = route.params;
+  return(
+      <View style={styles.container}>
+          <ModifyTeacher ruta='Admin' name={name}/>
+      </View>
+    );
 };
 
 

@@ -1,16 +1,15 @@
 import React from 'react';
 import { View, StyleSheet, Text } from 'react-native';
 import TaskMenu from  '../components/TaskMenu'; 
-import SeeTaskProgressScreen from './SeeTaskProgressScreen';
 
 
-const TaskScreen: React.FC = () =>{
+const MaterialsScreen: React.FC = () =>{
 return(
     <View style={styles.container}>
       <Text style={styles.title}>Panel de Administración de Tareas</Text>
-        <TaskMenu route='TaskMenu' label='Crear Tareas' iconName='tasks' />
-        <TaskMenu route='SeeTaskProgressScreen' label='Ver Estado de Tareas' iconName='check-circle' />
-        <TaskMenu route = 'ListTaskScreen' label = 'Listado de Tareas' iconName='tasks'/>
+        <TaskMenu route='ListMaterialScreen' label='Ver Materiales Disponibles' iconName='tasks' />
+        <TaskMenu route='RegisterMaterialScreen' label='Registrar Materiales' iconName='check-circle' />
+        <TaskMenu route='SeeRequestMaterialScreen' label='Solicitudes de material' iconName='clipboard' />
     </View>
   );
 };
@@ -30,4 +29,4 @@ const styles = StyleSheet.create({
 });
 
 
-export default TaskScreen;
+export default MaterialsScreen;

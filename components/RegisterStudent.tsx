@@ -8,7 +8,7 @@ interface RegisterStudentprops {
     ruta: String;
   }
 
-  
+
   const RegisterStudent: React.FC<RegisterStudentprops> = ({ ruta }) => {
   
     const navigation = useNavigation<NavigationProp<RootStackParamList>>();
@@ -20,29 +20,31 @@ interface RegisterStudentprops {
         const response = await fetch('https://api.jsdu9873.tech/api/students/add', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ nombre, aula, password, lectura, imagen, video }),
+            body: JSON.stringify({ nombre, aula, password, avatar, lectura, imagen, video }),
         });
         const result = await response.json();
         if (response.ok) {
-          Alert.alert('Éxito', result.message); 
-          alert(result.message || 'Alumno agregado exitosamente');
+          console.log('Éxito', result.message); 
+          console.log(result.message || 'Alumno agregado exitosamente');
         } else {
-          Alert.alert('Error', result.message || 'Hubo un problema al agregar el estudiante.');
-          alert(result.message || 'Hubo un problema al agregar el estudiante.');
+          console.log('Error', result.message || 'Hubo un problema al agregar el estudiante.');
+          console.log(result.message || 'Hubo un problema al agregar el estudiante.');
         }
       } catch (error) {
         console.error(error);
-        Alert.alert('Error', 'No se pudo conectar con el servidor.');
-        alert('No se pudo conectar con el servidor.');
+        console.log('Error', 'No se pudo conectar con el servidor.');
+        console.log('No se pudo conectar con el servidor.');
       }
     };
 
     const [nombre, setNombre] = useState('');
     const [aula, setCurso] = useState('');
     const [password, setPasswpord] = useState("");
+    const [avatar, setAvatar] = useState("");
     const [lectura, setLectura] = useState(false);
     const [imagen, setImagen] = useState(false);
     const [video, setVideo] = useState(false);
+    const [comedor, setComedor] = useState(false);
 
 
     return(
@@ -81,11 +83,19 @@ interface RegisterStudentprops {
                 <View style={[styles.checkbox, video && styles.checkboxSelected]} />
                 <Text style={styles.checkboxLabel}>Video</Text>
               </TouchableOpacity>
+              <TouchableOpacity
+                style={styles.checkboxContainer}
+                onPress={() => setComedor(false)}
+              >
+              </TouchableOpacity>
             </View>
 
             <Text style={styles.label}>Contraseña</Text>
             <TextInput style={styles.input} value={password} onChangeText={setPasswpord} placeholder="Introduce la contraseña" keyboardType="numeric" />
-  
+
+            <Text style={styles.label}>Avatar</Text>
+            <TextInput style={styles.input} value={avatar} onChangeText={setAvatar} placeholder="Introduce el URL del avatar del estudiante" />
+        
             <Pressable style={styles.button} onPress={pressButton}>
             <Text style={styles.buttonText}>Registrar</Text>
             </Pressable>

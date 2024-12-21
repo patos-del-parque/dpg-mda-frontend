@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { Text, StyleSheet, Image, View, TouchableOpacity, Alert } from 'react-native';
+import { Text, StyleSheet, Image, View, TouchableOpacity } from 'react-native';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
 import { RootStackParamList } from '../navigation/StackNavigator';
 
-type UserCardWithButtonProps = {
+type SeeTaskProgressProps = {
     name: string;
     aula: string;
     urlPhoto: string;
@@ -12,20 +12,13 @@ type UserCardWithButtonProps = {
     video:boolean;
 };
 
-const UserCardWithButton: React.FC<UserCardWithButtonProps> = ({ name, aula, urlPhoto, lectura, imagen, video}) => {
+const SeeTaskProgress: React.FC<SeeTaskProgressProps> = ({ name, aula, urlPhoto, lectura, imagen, video}) => {
     const navigation = useNavigation<NavigationProp<RootStackParamList>>()
     const [comedor, setComedor] = useState(false);
-    const [selectedStudentId, setSelectedStudentId] = useState<string | null>(null); 
-
-    const handleComedorAssignment = (name: string) => {
-      setComedor(true); // Cambiamos el estado de "Comedor" a true
-      setSelectedStudentId(name); // Guardamos el ID del alumno
-      console.log('Comedor activado para el estudiante con ID:', name);
-    };
 
     return (
         <View style={styles.card}>
-            <Text style={styles.name}>{name}</Text>
+            <Text style={styles.name}>{"Nombre del Estudiante: " + name}</Text>
             <Text style={styles.aula}>{"Aula: " + aula}</Text>
             <Text style={styles.aula}>{"Lectura: " + (lectura ? "sí" : "no")}</Text>
             <Text style={styles.aula}>{"Imagen: " + (imagen ? "sí" : "no")}</Text>
@@ -36,33 +29,13 @@ const UserCardWithButton: React.FC<UserCardWithButtonProps> = ({ name, aula, url
               style={styles.image}
             />
             <View style={styles.buttonContainer}>
-
               <TouchableOpacity
                 style={styles.button}
-                onPress={() => navigation.navigate('ModifyStudent', {name})}
+                onPress={() => navigation.navigate('EditUserTaskScreen', {name})}
               >
-                <Text style={styles.buttonText}>Modificar Estudiante</Text>
-              </TouchableOpacity>
-
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => navigation.navigate('EraseStudent', {name})}
-              >
-                <Text style={styles.buttonText}>Borrar Estudiante</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => navigation.navigate('AssignTaskScreen', {name})}
-              >
-                <Text style={styles.buttonText}>Asignar Tarea</Text>
+                <Text style={styles.buttonText}>Ver tareas asignadas</Text>
               </TouchableOpacity>
               
-              <TouchableOpacity
-                style={styles.button}
-                onPress={() => handleComedorAssignment(name)}              >
-                <Text style={styles.buttonText}>Asignar Tarea Comedor</Text>
-              </TouchableOpacity>
-
             </View>
         </View>
     );
@@ -75,6 +48,7 @@ const styles = StyleSheet.create({
         borderRadius: 8,
         backgroundColor: '#f8f9fa',
         alignItems: 'center',
+        borderColor: '#007BFF', 
         justifyContent: 'center',
       },
       name: {
@@ -96,12 +70,6 @@ const styles = StyleSheet.create({
         borderWidth: 2,
         borderColor: '#3498DB',
     },
-      buttonContainer: {
-        /* flexDirection: 'row',
-        justifyContent: 'space-between',
-        flexWrap: 'wrap',
-        width: '100%', */
-      },
       button: {
         backgroundColor: '#007BFF',
         padding: 12,
@@ -117,4 +85,4 @@ const styles = StyleSheet.create({
       },
 });
 
-export default UserCardWithButton;
+export default SeeTaskProgress;

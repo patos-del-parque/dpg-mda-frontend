@@ -8,8 +8,7 @@ const EraseStudentScreen: React.FC = ({ route }) =>{
   const { name } = route.params;
   return(
     <View style={styles.container}>
-      <Text>{name}</Text>
-      <EraseStudent  ruta='Admin' name={name}/>
+      <EraseStudent  ruta='ListStudent' name={name}/>
     </View>
   );
 };

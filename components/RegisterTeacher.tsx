@@ -24,14 +24,14 @@ interface RegisterTeacherprops {
         });
         const result = await response.json();
         if (response.ok) {
-          Alert.alert('Éxito', result.message); 
-          alert(result.message || 'Profesor agregado exitosamente');
+          console.log('Éxito', result.message); 
+          console.log(result.message || 'Profesor agregado exitosamente');
         } else {
-          Alert.alert('Error', result.message || 'Hubo un problema al agregar al profesor.');
-          alert(result.message || 'Hubo un problema al agregar al profesor.');
+          console.log('Error', result.message || 'Hubo un problema al agregar al profesor.');
+          console.log(result.message || 'Hubo un problema al agregar al profesor.');
         }
       } catch (error) {
-          alert('Error al agregar el profesor');
+        console.log('Error al agregar el profesor');
       }
     };
 
